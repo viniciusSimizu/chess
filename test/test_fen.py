@@ -1,6 +1,7 @@
-from typing import Any, cast
+from typing import Any
 
-from fen.fen import ColorEnum, Fen, FenPiece, PieceMapping
+from chess import PieceColorEnum
+from chess.fen.fen import Fen, FenPiece, PieceMapping
 
 class Piece(FenPiece):
     def __eq__(self, other: Any) -> bool:
@@ -47,12 +48,12 @@ class TestFen:
 
         given_result = fen_object.build(fen_notation)
         expected_result: list[list[Piece | None]] = [
-                [Rook(color=ColorEnum.BLACK), Knight(color=ColorEnum.BLACK), Bishop(color=ColorEnum.BLACK), Queen(color=ColorEnum.BLACK)],
-                [Pawn(color=ColorEnum.BLACK), Pawn(color=ColorEnum.BLACK), Pawn(color=ColorEnum.BLACK), Pawn(color=ColorEnum.BLACK)],
+                [Rook(color=PieceColorEnum.BLACK), Knight(color=PieceColorEnum.BLACK), Bishop(color=PieceColorEnum.BLACK), Queen(color=PieceColorEnum.BLACK)],
+                [Pawn(color=PieceColorEnum.BLACK), Pawn(color=PieceColorEnum.BLACK), Pawn(color=PieceColorEnum.BLACK), Pawn(color=PieceColorEnum.BLACK)],
                 [None, None, None, None],
                 [None, None, None, None],
-                [Pawn(color=ColorEnum.WHITE), Pawn(color=ColorEnum.WHITE), Pawn(color=ColorEnum.WHITE), Pawn(color=ColorEnum.WHITE)],
-                [King(color=ColorEnum.WHITE), Bishop(color=ColorEnum.WHITE), Knight(color=ColorEnum.WHITE), Rook(color=ColorEnum.WHITE)]
+                [Pawn(color=PieceColorEnum.WHITE), Pawn(color=PieceColorEnum.WHITE), Pawn(color=PieceColorEnum.WHITE), Pawn(color=PieceColorEnum.WHITE)],
+                [King(color=PieceColorEnum.WHITE), Bishop(color=PieceColorEnum.WHITE), Knight(color=PieceColorEnum.WHITE), Rook(color=PieceColorEnum.WHITE)]
                 ]
 
         assert given_result == expected_result

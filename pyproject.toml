@@ -10,4 +10,3 @@ version = "PACKAGEVERSION"
 addopts = [
     "--import-mode=importlib",
 ]
-pythonpath = "src"

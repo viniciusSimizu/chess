@@ -1,12 +1,9 @@
 from typing import Literal
-from enum import Enum
 
-class ColorEnum(Enum):
-    BLACK = 'b'
-    WHITE = 'w'
+from chess import PieceColorEnum
 
 class FenPiece:
-    def __init__(self, color: ColorEnum) -> None:
+    def __init__(self, color: PieceColorEnum) -> None:
         self.color = color
 
 
@@ -55,7 +52,7 @@ class Fen:
 
     def piece_factory(self, char: str) -> FenPiece:
         pieceKey: PieceKey | None = None
-        color = ColorEnum.WHITE if char.isupper() else ColorEnum.BLACK
+        color = PieceColorEnum.WHITE if char.isupper() else PieceColorEnum.BLACK
         
         match char.upper():
             case 'P':
