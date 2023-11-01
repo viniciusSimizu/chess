@@ -13,16 +13,11 @@ class TestKing:
         king.update_movements(board)
 
         given = king.movements
-        expected: list[PiecePosition] = [{'x': 0, 'y': 0},
-                                         {'x': 1, 'y': 0},
-                                         {'x': 2, 'y': 0},
-                                         {'x': 0, 'y': 1},
-                                         {'x': 2, 'y': 1},
-                                         {'x': 0, 'y': 2},
-                                         {'x': 1, 'y': 2},
-                                         {'x': 2, 'y': 2}]
+        expected: list[list[bool]] = [[True, True, True],
+                                      [True, False, True],
+                                      [True, True, True]]
 
-        assert UnitTL.assert_list(given, expected)
+        assert given == expected
 
     def test_update_movements_friend_collision(self):
         dummy = DummyPiece(color=PieceColorEnum.BLACK)
@@ -33,10 +28,10 @@ class TestKing:
         king.update_movements(board)
 
         given = king.movements
-        expected: list[PiecePosition] = [{'x': 1, 'y': 0},
-                                         {'x': 0, 'y': 1}]
+        expected: list[list[bool]] = [[False, True],
+                                      [True, False]]
 
-        assert UnitTL.assert_list(given, expected)
+        assert given == expected
 
     def test_update_movements_enemy_collision(self):
         dummy = DummyPiece(color=PieceColorEnum.WHITE)
@@ -47,9 +42,8 @@ class TestKing:
         king.update_movements(board)
 
         given = king.movements
-        expected: list[PiecePosition] = [{'x': 0, 'y': 0},
-                                         {'x': 1, 'y': 0},
-                                         {'x': 0, 'y': 1}]
+        expected: list[list[bool]] = [[True, True],
+                                      [True, False]]
 
-        assert UnitTL.assert_list(given, expected)
+        assert given == expected
 

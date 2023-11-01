@@ -13,11 +13,9 @@ class Pawn(DefaultPiece):
         super().__init__(color, board_size, position)
 
     def update_movements(self, board: list[list[Piece | None]]) -> None:
-        self.movements.clear()
+        self.clean_movements()
+        y = self.position['y'] + 1 * self.__vertical_direction_multiplier
 
-        to_y = self.position['y'] + 1 * self.__vertical_direction_multiplier
-
-        if 0 <= to_y < self.board_size['height'] and board[to_y][self.position['x']] == None:
-            self.movements.append({'x': self.position['x'],
-                                   'y': to_y})
+        if 0 <= y < self.board_size['height'] and board[y][self.position['x']] == None:
+            self.movements[y][self.position['x']] = True
         

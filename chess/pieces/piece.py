@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import TypedDict
+from typing import TypeVar, TypedDict
 
 from chess import PieceColorEnum
 
@@ -10,6 +10,8 @@ class BoardSize(TypedDict):
 class PiecePosition(TypedDict):
     x: int
     y: int
+
+T = TypeVar('T', bound='Piece')
 
 class Piece(ABC):
     @property
@@ -34,7 +36,7 @@ class Piece(ABC):
 
     @property
     @abstractmethod
-    def movements(self) -> list[PiecePosition]:
+    def movements(self) -> list[list[bool]]:
         pass
 
     @abstractmethod
@@ -42,6 +44,6 @@ class Piece(ABC):
         pass
 
     @abstractmethod
-    def update_movements(self, board: list[list['Piece']]) -> None:
+    def update_movements(self: T, board: list[list[T|None]]) -> None:
         pass
 

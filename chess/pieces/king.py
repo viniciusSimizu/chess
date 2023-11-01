@@ -8,7 +8,7 @@ class King(DefaultPiece):
         super().__init__(color, board_size, position)
 
     def update_movements(self, board: list[list[Piece | None]]) -> None:
-        self.movements.clear()
+        self.clean_movements()
 
         relative_moves = [-1, 0, 1]
 
@@ -17,12 +17,18 @@ class King(DefaultPiece):
                 if relative_y == 0 and relative_x == 0:
                     continue
 
-                position: PiecePosition = {'x': self.position['x'] + relative_x,                                           'y':self.position['y'] + relative_y}
-                if not 0 <= position['x'] < self.board_size['width'] or not 0 <= position['y'] < self.board_size['height']:
+                x = self.position['x'] + relative_x
+                y = self.position['y'] + relative_y
+
+                if not 0 <= x < self.board_size['width'] or not 0 <= y < self.board_size['height']:
                     continue
 
-                target = board[position['y']][position['x']]
+                target = board[y][x]
 
-                if target == None or self.color != target.color:
-                    self.movements.append(position)
+                if target == None:
+                    self.movements[y][x] = True
+                    continue
+
+                if target.color != self.color:
+                    self.movements[y][x] = True
 
