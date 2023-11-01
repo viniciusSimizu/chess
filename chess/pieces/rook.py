@@ -28,22 +28,20 @@ class Rook(DefaultPiece):
             moving_squares = squares - (squares * square_direction + self.position['x'] * direction['horizontal'])
 
             for distance in range(moving_squares):
-                x = self.position['x'] + (distance+1) * direction['horizontal']
-                y = self.position['y'] + (distance+1) * direction['vertical']
+                position: PiecePosition = {'x': self.position['x'] + (distance+1) * direction['horizontal'],
+                                                  'y': self.position['y'] + (distance+1) * direction['vertical']}
 
-                if not 0 <= x < self.board_size['width'] or not 0 <= y < self.board_size['height']:
+                if not 0 <= position['x'] < self.board_size['width'] or not 0 <= position['y'] < self.board_size['height']:
                     break
 
-                target_position: PiecePosition = {'x': x,
-                                                  'y': y}
-                target = board[y][x]
+                target = board[position['y']][position['x']]
 
                 if target is None:
-                    self.movements.append(target_position)
+                    self.movements.append(position)
                     continue
 
                 if self.color != target.color:
-                    self.movements.append(target_position)
+                    self.movements.append(position)
                 break
                 
 

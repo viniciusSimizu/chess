@@ -26,24 +26,19 @@ class Knight(DefaultPiece):
                     horizontal_step = direction['vertical'] * sidestep_weight * SIDE_STEP_DISTANCE
                     vertical_step = direction['horizontal'] * sidestep_weight * SIDE_STEP_DISTANCE
 
-                    horizontal_position = self.position['x'] + horizontal + horizontal_step
-                    vertical_position = self.position['y'] + vertical + vertical_step
+                    position: PiecePosition = {'x': self.position['x'] + horizontal + horizontal_step,
+                                               'y':self.position['y'] + vertical + vertical_step}
 
-                    within_width = 0 <= horizontal_position < self.board_size['width']
-                    within_height = 0 <= vertical_position < self.board_size['height']
-
-                    if not within_width or not within_height:
+                    if not 0 <= position['x'] < self.board_size['width'] or not 0 <= position['y'] < self.board_size['height']:
                         continue
 
-                    target = board[vertical_position][horizontal_position]
-                    target_position: PiecePosition = {'x': horizontal_position,
-                                                      'y': vertical_position}
+                    target = board[position['y']][position['x']]
 
                     if not target:
-                        self.movements.append(target_position)
+                        self.movements.append(position)
                         continue
 
                     is_friend = self.color == target.color
                     if not is_friend:
-                        self.movements.append(target_position)
-        
+                        self.movements.append(position)
+
