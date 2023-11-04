@@ -1,33 +1,39 @@
-from typing import Literal
+from abc import ABC
+from enum import Enum
+from typing import Literal, TypedDict, cast, get_args
 
 from chess import PieceColorEnum
 
-class FenPiece:
-    def __init__(self, color: PieceColorEnum) -> None:
-        self.color = color
+class PieceEnum(Enum):
+    PAWN = 'p'
+    ROOK = 'r'
+    KNIGHT = 'n'
+    BISHOP = 'b'
+    QUEEN = 'q'
+    KING = 'k'
 
 
-class PieceMapping:
-    def __init__(self, pawn: type[FenPiece], bishop: type[FenPiece], knight: type[FenPiece], rook: type[FenPiece], queen: type[FenPiece], king: type[FenPiece]) -> None:
-        self.pawn = pawn
-        self.bishop = bishop
-        self.knight = knight
-        self.rook = rook
-        self.queen = queen
-        self.king = king
+class FenPiece(ABC):
+    def __init__(self) -> None:
+        self.color: PieceColorEnum | None = None
+        self.fen: str | None = None
 
-    def __getitem__(self, search: str):
-        return self.__annotations__[search]
 
-PieceKey = Literal['pawn', 'bishop', 'knight', 'rook', 'queen', 'king']
+class PieceMapping(TypedDict):
+    p: type[FenPiece]
+    r: type[FenPiece]
+    n: type[FenPiece]
+    b: type[FenPiece]
+    q: type[FenPiece]
+    k: type[FenPiece]
+
+
+PieceKeys = Literal['p', 'r', 'n', 'b', 'q', 'k']
+
 
 class Fen:
-    piece_mapping: PieceMapping
-
-    def __init__(self, piece_mapping: PieceMapping) -> None:
-        self.piece_mapping = piece_mapping
-
-    def build(self, fen: str) -> list[list[FenPiece | None]]:
+    @staticmethod
+    def build(fen: str, piece_mapping: PieceMapping) -> list[list[FenPiece | None]]:
         board: list[list[FenPiece | None]] = []
         row: list[FenPiece | None] = []
 
@@ -42,33 +48,29 @@ class Fen:
                 row = []
                 continue
             
-            piece = self.piece_factory(char)
+            piece = Fen.piece_factory(char, piece_mapping)
             row.append(piece)
 
         board.append(row)
-
         return board
 
-
-    def piece_factory(self, char: str) -> FenPiece:
-        pieceKey: PieceKey | None = None
+    @staticmethod
+    def which_color(char: str) -> PieceColorEnum:
         color = PieceColorEnum.WHITE if char.isupper() else PieceColorEnum.BLACK
+        return color
+
+
+    @staticmethod
+    def piece_factory(char: str, piece_mapping: PieceMapping) -> FenPiece:
+        piece_key = char.lower()
+
+        if piece_key not in get_args(PieceKeys):
+            raise ValueError('FEN Piece - invalid char', char)
+        piece_key = cast(PieceKeys, piece_key)
         
-        match char.upper():
-            case 'P':
-                pieceKey = 'pawn'
-            case 'B':
-                pieceKey = 'bishop'
-            case 'N':
-                pieceKey = 'knight'
-            case 'R':
-                pieceKey = 'rook'
-            case 'Q':
-                pieceKey = 'queen'
-            case 'K':
-                pieceKey = 'king'
-            case _:
-                raise ValueError('FEN Piece - invalid char', char)
-        
-        return getattr(self.piece_mapping, pieceKey)(color=color)                
+        piece = piece_mapping[piece_key]()
+        piece.color = Fen.which_color(char)
+        piece.fen = char
+
+        return piece
 

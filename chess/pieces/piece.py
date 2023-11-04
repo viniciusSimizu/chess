@@ -1,7 +1,8 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from typing import TypeVar, TypedDict
 
 from chess import PieceColorEnum
+from chess.board import Board
 
 class BoardSize(TypedDict):
     height: int
@@ -14,36 +15,23 @@ class PiecePosition(TypedDict):
 T = TypeVar('T', bound='Piece')
 
 class Piece(ABC):
-    @property
-    @abstractmethod
-    def color(self) -> PieceColorEnum:
-        pass
+    def __init__(self, board: Board, color: PieceColorEnum, position: PiecePosition) -> None:
+        self.board = board
+        self.color = color
+        self.position = position
 
-    @property
-    @abstractmethod
-    def board_size(self) -> BoardSize:
-        pass
+        movements: list[list[bool]] = []
+        for i in range(len(board.board)):
+            row: list[bool] = []
+            for _ in range(len(board.board[i])):
+                row.append(False)
+            movements.append(row)
 
-    @property
-    @abstractmethod
-    def position(self) -> PiecePosition:
-        pass
+        self.movements = movements
 
-    @position.setter
-    @abstractmethod
-    def position(self, value: PiecePosition) -> None:
-        pass
-
-    @property
-    @abstractmethod
-    def movements(self) -> list[list[bool]]:
-        pass
-
-    @abstractmethod
     def can_move_to(self, x: int, y: int) -> bool:
-        pass
+        ...
 
-    @abstractmethod
-    def update_movements(self: T, board: list[list[T|None]]) -> None:
+    def update_movements(self: T, board: list[list[T | None]]) -> None:
         pass
 
