@@ -3,16 +3,16 @@ package com.vini.app.pieces;
 import java.util.List;
 import java.util.Objects;
 
+import com.vini.app.fen.FenPieceEnum;
 import com.vini.app.types.ColorEnum;
 
 public class Pawn extends Piece implements IPiece {
-	final int[] directions = {0, 1};
-	final int[][] forkDirections = {{-1, 1}, {1, 1}};
+	private final int[][] forkDirections = {{-1, 1}, {1, 1}};
 	Boolean hasMoved = false;
 	int directionWeight = 1;
 
-	Pawn(ColorEnum color, int[] position) {
-		super(color, position);
+	Pawn(ColorEnum color, int[] position, FenPieceEnum fen) {
+		super(color, position, fen);
 
 		if (color == ColorEnum.WHITE) {
 			this.directionWeight = -1;
@@ -21,13 +21,17 @@ public class Pawn extends Piece implements IPiece {
 
 	@Override
 	public void move(List<List<Piece>> board, int[] position) {
-		board.get(position[1]).set(position[0], this);
-		board.get(this.position[1]).set(this.position[0], null);
+		super.move(board, position);
+
+		if (!this.hasMoved) {
+			this.hasMoved = true;
+		}
 	}
 
 	@Override
 	public Piece updateMoves(final List<List<Piece>> board) {
 		int maxDistance = 1;
+
 		if (!this.hasMoved) {
 			maxDistance = 2;
 		}
@@ -62,7 +66,7 @@ public class Pawn extends Piece implements IPiece {
 
 			Piece target = board.get(targetPosition[1]).get(targetPosition[0]);
 
-			if (!Objects.nonNull(target) || this.isFriend(this, target)) {
+			if (Objects.isNull(target) || this.isFriend(this, target)) {
 				continue;	
 			}
 

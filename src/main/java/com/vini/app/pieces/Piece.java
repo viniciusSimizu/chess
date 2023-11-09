@@ -3,21 +3,28 @@ package com.vini.app.pieces;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.vini.app.fen.FenPieceEnum;
 import com.vini.app.types.ColorEnum;
 
 public abstract class Piece {
 	public ColorEnum color;
 	public int[] position = new int[2];
 	public List<List<Boolean>> moves;
+	public FenPieceEnum fen;
 
-	Piece(ColorEnum color, int[] position) {
+	Piece(ColorEnum color, int[] position, FenPieceEnum fen) {
 		this.color = color;
 		this.position = position;
+		this.fen = fen;
 	}
 
 	public void move(List<List<Piece>> board, int[] position) {
 		board.get(position[1]).set(position[0], this);
 		board.get(this.position[1]).set(this.position[0], null);
+	}
+
+	public Boolean canMove(List<List<Piece>> board, int[] position) {
+		return this.moves.get(position[1]).get(position[0]);
 	}
 
 	protected void structMoves(Piece piece, List<List<Piece>> board) {

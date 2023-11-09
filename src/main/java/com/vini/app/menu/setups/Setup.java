@@ -1,8 +1,6 @@
 package com.vini.app.menu.setups;
 
-public abstract class Setup {
+public abstract class Setup implements ISetup {
 	public String description;
-
-	abstract SetupData getConfig();
 }
 
