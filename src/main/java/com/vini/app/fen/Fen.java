@@ -2,45 +2,29 @@ package com.vini.app.fen;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.vini.app.pieces.Piece;
+import com.vini.app.pieces.IPiece;
 import com.vini.app.types.ColorEnum;
 
 public class Fen {
-	HashMap<String, Class<? extends Piece>> pieceMap;
+	Map<String, Class<? extends IPiece>> pieceMap;
 
-	Fen(HashMap<String, Class<? extends Piece>> pieceMap) {
+	public Fen(Map<String, Class<? extends IPiece>> pieceMap) {
 		this.pieceMap = pieceMap;
 	}
 
-	public List<List<Piece>> build(String fenNotation) {
-		List<List<Piece>> board = new ArrayList<>();
-		List<Piece> row = new ArrayList<>();
+	public List<List<IPiece>> build(String fenNotation) {
+		List<List<IPiece>> board = new ArrayList<>();
+		List<IPiece> row = new ArrayList<>();
 
 		for (int i = 0; i < fenNotation.length(); i++) {
 			String command = this.fenCommand(fenNotation, i);
 
-			if (command == "/") {
+			if (command.equals("/")) {
 				board.add(row);
 				row = new ArrayList<>();
-				continue;
-			}
-
-			if (command.matches("[a-zA-Z]+")) {
-				ColorEnum color = ColorEnum.BLACK;
-
-				if (Character.isUpperCase(command.charAt(0))) {
-					color = ColorEnum.WHITE;
-				}
-
-				try {
-					Constructor<? extends Piece> constructor = this.pieceMap.get(command).getDeclaredConstructor();
-					Piece piece = constructor.newInstance(color, new int[]{row.size(), board.size()}, command);
-					row.add(piece);
-				} catch (Exception e) {}
-
 				continue;
 			}
 
@@ -49,6 +33,25 @@ public class Fen {
 					row.add(null);
 				}
 			}
+
+			ColorEnum color = ColorEnum.BLACK;
+
+			if (Character.isUpperCase(command.charAt(0))) {
+				color = ColorEnum.WHITE;
+			}
+
+			try {
+				IPiece piece = this.pieceMap
+					.get(command.toLowerCase())
+					.getConstructor()
+					.newInstance()
+					.setColor(color)
+					.setPosition(new int[]{row.size(), board.size()})
+					.setFen(command)
+					.setMoves(new ArrayList<List<Boolean>>());
+
+				row.add(piece);
+			} catch (Exception e) {}
 		}
 
 		board.add(row);
@@ -60,7 +63,7 @@ public class Fen {
 
 		while(true) {
 			char chr = fenNotation.charAt(i);
-			command.concat(Character.toString(chr));
+			command = command.concat(Character.toString(chr));
 
 			if (command.matches("\\d+")) {
 				try {

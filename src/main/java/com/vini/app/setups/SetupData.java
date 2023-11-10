@@ -1,14 +1,14 @@
-package com.vini.app.menu.setups;
+package com.vini.app.setups;
 
 import java.util.Map;
 
-import com.vini.app.pieces.Piece;
+import com.vini.app.pieces.IPiece;
 import com.vini.app.types.ColorEnum;
 
 public class SetupData {
 	public String fen;
 	public ColorEnum turn;
-	public Map<String, Class<? extends Piece>> pieceMap;
+	public Map<String, Class<? extends IPiece>> pieceMap;
 	
 	public SetupData setFen(String fen) {
 		this.fen = fen;
@@ -20,7 +20,7 @@ public class SetupData {
 		return this;
 	}
 
-	public SetupData setPieceMap(Map<String, Class<? extends Piece>> map) {
+	public SetupData setPieceMap(Map<String, Class<? extends IPiece>> map) {
 		this.pieceMap = map;
 		return this;
 	}
