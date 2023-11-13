@@ -9,25 +9,26 @@ public abstract class Piece implements IPiece {
 	private ColorEnum color;
 	private String fen;
 	private int[] position = new int[2];
-	private List<List<Boolean>> moves = new ArrayList<>();
+	private List<List<Boolean>> moves;
+	private boolean movesUpdated = false;
 
 	public void move(List<List<IPiece>> board, int[] position) {
 		board.get(position[1]).set(position[0], this);
 		board.get(this.position[1]).set(this.position[0], null);
 	}
 
-	public Boolean canMove(List<List<IPiece>> board, int[] position) {
+	public boolean canMove(List<List<IPiece>> board, int[] position) {
 		return this.moves.get(position[1]).get(position[0]);
 	}
 
-	protected void structMoves(Piece piece, List<List<IPiece>> board) {
-		piece.moves = new ArrayList<>();
+	public void structMoves(List<List<IPiece>> board) {
+		this.moves = new ArrayList<>();
 		for (int i = 0; i < board.size(); i++) {
 			ArrayList<Boolean> row = new ArrayList<>();
 			for (int j = 0; j < board.get(i).size(); j++) {
 				row.add(false);
 			}
-			piece.moves.add(row);
+			this.moves.add(row);
 		}
 	}
 
@@ -75,8 +76,12 @@ public abstract class Piece implements IPiece {
 	public List<List<Boolean>> moves() {
 		return this.moves;
 	}
-	public IPiece setMoves(List<List<Boolean>> moves) {
-		this.moves = moves;
+
+	public boolean movesUpdated() {
+		return this.movesUpdated;
+	}
+	public IPiece setMovesUpdated(boolean state) {
+		this.movesUpdated = state;
 		return this;
 	}
 }

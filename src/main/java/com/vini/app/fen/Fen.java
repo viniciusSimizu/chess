@@ -1,11 +1,11 @@
 package com.vini.app.fen;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.vini.app.pieces.IPiece;
+import com.vini.app.pieces.PieceDecorator;
 import com.vini.app.types.ColorEnum;
 
 public class Fen {
@@ -47,10 +47,9 @@ public class Fen {
 					.newInstance()
 					.setColor(color)
 					.setPosition(new int[]{row.size(), board.size()})
-					.setFen(command)
-					.setMoves(new ArrayList<List<Boolean>>());
+					.setFen(command);
 
-				row.add(piece);
+				row.add(new PieceDecorator(piece));
 			} catch (Exception e) {}
 		}
 

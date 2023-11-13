@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+import com.vini.app.helper.Helper;
 import com.vini.app.pieces.IPiece;
 import com.vini.app.translate.ColorTranslate;
 import com.vini.app.translate.PieceDisplayTranslate;
@@ -12,13 +13,25 @@ import com.vini.app.types.ColorEnum;
 public class BoardManager {
 	private List<List<IPiece>> board;
 	private ColorEnum turn;
+	private BoardManagerObserver observer = new BoardManagerObserver();
 
 	private Scanner sc = new Scanner(System.in);
 	
 	public BoardManager setBoard(List<List<IPiece>> board) {
 		this.board = board;
+		this.observer.clear();
+
+		for (List<IPiece> row : board) {
+			for (IPiece piece : row) {
+				this.observer.subscribe(piece);
+			};
+		}
+
+		this.observer.structMoves(board);
+
 		return this;
 	}
+
 	public BoardManager setTurn(ColorEnum turn) {
 		this.turn = turn;
 		return this;
@@ -41,12 +54,24 @@ public class BoardManager {
 				Integer.parseInt(splitted[1])
 			};
 
+			if (!Helper.indexesInsideArray(this.board, new int[]{position[1], position[0]})) {
+				System.out.println("Position not found");
+				continue;
+			};
+
 			IPiece piece = this.board.get(position[1]).get(position[0]);
 
-			if (piece.color() != this.turn) {
+			if (Objects.isNull(piece)) {
+				System.out.println("No piece selected");
 				continue;
 			}
 
+			if (piece.color() != this.turn) {
+				System.out.println(String.format("Cannot move piece in %s turn", ColorTranslate.book.get(this.turn)));
+				continue;
+			}
+
+			piece.updateMoves(board);
 			this.printBoard(piece);
 
 			System.out.print("To: ");
@@ -61,6 +86,7 @@ public class BoardManager {
 			if (piece.canMove(this.board, targetPosition)) {
 				piece.move(this.board, targetPosition);
 				this.toggleTurn();
+				this.observer.clearMoves();
 			} else {
 				System.out.println("Invalid move, try again");
 			}
