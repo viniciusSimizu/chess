@@ -3,34 +3,46 @@ package com.vini.app.menu;
 import java.util.List;
 import java.util.Scanner;
 
-import com.vini.app.pieces.IPiece;
-import com.vini.app.setups.Setup;
-import com.vini.app.setups.SetupClassic;
-import com.vini.app.setups.SetupData;
-import com.vini.app.boardManager.BoardManager;
-import com.vini.app.fen.Fen;
+import com.vini.app.board.Board;
+import com.vini.app.fen.FenImpl;
+import com.vini.app.game.Game;
+import com.vini.app.mode.ModeImpl;
+import com.vini.app.mode.ModeRegistry;
+import com.vini.app.mode.setup.Setup;
 
 public class Menu {
-	private Setup[] setups = {
-		new SetupClassic()
-	};
+	private static Menu instance;
+
+	private Menu() {};
+
+	public static Menu instance() {
+		if (Menu.instance == null) {
+			Menu.instance = new Menu();
+		}
+		return Menu.instance;
+	}
+
 	private Scanner sc = new Scanner(System.in);
+	private List<ModeImpl> modes = ModeRegistry.instance().modes();
 
 	public void start() {
-		for (int i = 0; i < this.setups.length; i++) {
-			System.out.println(String.format("%d - %s", i+1, setups[i].description()));
+		for (int i = 0; i < this.modes.size(); i++) {
+			System.out.println(String.format("%d - %s", i+1, this.modes.get(i).description()));
 		}
 
 		System.out.print("Choose one setup: ");
 		int choosed = this.sc.nextInt() - 1;
 
-		SetupData setup = this.setups[choosed].config();
-		List<List<IPiece>> board = new Fen(setup.pieceMap).build(setup.fen);
+		ModeImpl mode = this.modes.get(choosed);
+		Setup setup = mode.setup();
 
-		new BoardManager()
-			.setBoard(board)
-			.setTurn(setup.turn)
-			.play();
+		FenImpl fenFactory = new FenImpl(mode.factory());
+
+		Board board = fenFactory.build(setup.fen());
+
+		Game game = new Game(board, setup.turn());
+
+		game.play();
 	}
 }
 
