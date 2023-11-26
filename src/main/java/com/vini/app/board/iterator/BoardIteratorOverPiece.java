@@ -1,9 +1,9 @@
 package com.vini.app.board.iterator;
 
 import com.vini.app.board.Board;
-import com.vini.app.piece.Piece;
+import com.vini.app.piece.IPiece;
 
-public class BoardIteratorOverPiece implements BoardIterator {
+public class BoardIteratorOverPiece implements IBoardIterator {
 	Board board;
 	int rowIdx = 0;
 	int colIdx = 0;
@@ -30,7 +30,7 @@ public class BoardIteratorOverPiece implements BoardIterator {
 				continue;
 			}
 
-			boolean isPiece = this.board.table().get(rowIdx).get(colIdx) instanceof Piece;
+			boolean isPiece = this.board.table().get(rowIdx).get(colIdx) instanceof IPiece;
 
 			if (isPiece) {
 				return true;
@@ -41,7 +41,7 @@ public class BoardIteratorOverPiece implements BoardIterator {
 	}
 
 	@Override
-	public Piece next() {
+	public IPiece next() {
 		if (!this.hasNext()) {
 			return null;
 		}
@@ -55,13 +55,12 @@ public class BoardIteratorOverPiece implements BoardIterator {
 				continue;
 			}
 
-			Piece square = this.board.table().get(this.rowIdx).get(this.colIdx);
+			IPiece square = this.board.table().get(this.rowIdx).get(this.colIdx);
+			this.colIdx++;
 
-			if (square instanceof Piece) {
+			if (square instanceof IPiece) {
 				return square;
 			}
-
-			this.colIdx++;
 		}
 	}
 }

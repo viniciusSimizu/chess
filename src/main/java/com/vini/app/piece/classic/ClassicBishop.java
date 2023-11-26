@@ -1,28 +1,31 @@
 package com.vini.app.piece.classic;
 
 import com.vini.app.board.Board;
-import com.vini.app.board.BoardHelper;
-import com.vini.app.piece.Piece;
+import com.vini.app.piece.IPiece;
 import com.vini.app.piece.PieceHelper;
-import com.vini.app.piece.PieceImpl;
+import com.vini.app.piece.abstracts.Bishop;
 
-public class Bishop extends PieceImpl {
+public class ClassicBishop extends Bishop {
 	private final int[][] directions = {{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
 
+	protected ClassicBishop(Board board) {
+		super(board);
+	}
+
 	@Override
-	public Piece updateMoves(Board board) {
+	public IPiece updateMoves() {
 		for (int[] direction : this.directions) {
-			int[] position = this.position();
+			int[] position = this.position().clone();
 
 			while (true) {
-				position[0] = position[0] + direction[0];
-				position[1] = position[1] + direction[1];
+				position[0] += direction[0];
+				position[1] += direction[1];
 
-				if (!BoardHelper.isPositionInsideBoard(position, board)) {
+				if (!this.board.isInsideTable(position)) {
 					break;
 				};
 
-				Piece target = board.table().get(position()[1]).get(position()[0]);
+				IPiece target = board.findPiece(position);
 
 				if (PieceHelper.isAlly(this, target)) {
 					break;
@@ -38,5 +41,4 @@ public class Bishop extends PieceImpl {
 
 		return this;
 	}
-	
 }

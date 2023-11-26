@@ -3,24 +3,35 @@ package com.vini.app.board;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.vini.app.piece.Piece;
+import com.vini.app.piece.IPiece;
 
 public class Board {
-	private List<List<Piece>> table = new ArrayList<>();
+	private List<List<IPiece>> table = new ArrayList<>();
 
-	public Piece piece(int[] position) {
-		if (BoardHelper.isPositionInsideBoard(position, this)) {
+	public Board(List<List<IPiece>> table) {
+		this.table = table;
+	}
+
+	public IPiece findPiece(int[] position) {
+		if (this.isInsideTable(position)) {
 			return this.table().get(position[1]).get(position[0]);
 		}
 		return null;
 	}
 
-	public List<List<Piece>> table() {
-		return this.table;
+	public boolean isInsideTable(int[] position) {
+		if (position[1] < 0 || position[1] >= this.table().size()) {
+			return false;
+		}
+
+		if (position[0] >= 0 && position[0] < this.table().get(position[1]).size()) {
+			return true;
+		}
+
+		return false;
 	}
 
-	public Board setTable(List<List<Piece>> board) {
-		this.table = board;
-		return this;
+	public List<List<IPiece>> table() {
+		return this.table;
 	}
 }

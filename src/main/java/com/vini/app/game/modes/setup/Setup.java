@@ -1,12 +1,12 @@
-package com.vini.app.mode.setup;
+package com.vini.app.game.modes.setup;
 
 import com.vini.app.types.ColorEnum;
 
-public class SetupImpl implements Setup {
-	private String fen;
-	private ColorEnum turn;
+public class Setup implements ISetup {
+	private final String fen;
+	private final ColorEnum turn;
 
-	public SetupImpl(String fen, ColorEnum turn) {
+	public Setup(String fen, ColorEnum turn) {
 		this.fen = fen;
 		this.turn = turn;
 	}

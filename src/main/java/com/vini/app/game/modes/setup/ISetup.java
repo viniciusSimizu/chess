@@ -1,8 +1,8 @@
-package com.vini.app.mode.setup;
+package com.vini.app.game.modes.setup;
 
 import com.vini.app.types.ColorEnum;
 
-public interface Setup {
+public interface ISetup {
 	public ColorEnum turn();
 	public String fen();
 }

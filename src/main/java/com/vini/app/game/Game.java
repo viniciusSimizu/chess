@@ -1,20 +1,23 @@
 package com.vini.app.game;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Scanner;
 
 import com.vini.app.board.Board;
-import com.vini.app.board.BoardHelper;
-import com.vini.app.piece.Piece;
+import com.vini.app.board.iterator.BoardIteratorOverPiece;
+import com.vini.app.piece.IPiece;
+import com.vini.app.piece.commands.PieceMoveCommand;
 import com.vini.app.translate.PieceEnumIconTranslate;
 import com.vini.app.types.ColorEnum;
 
 public class Game {
-	private ColorEnum turn;
 	private Board board;
+	private ColorEnum turn;
 
-	private Scanner sc = new Scanner(System.in);
+	private final List<PieceMoveCommand> moveHistory = new ArrayList<>();
+	private final Scanner sc = new Scanner(System.in);
 
 	public Game(Board board, ColorEnum turn) {
 		this.board = board;
@@ -26,7 +29,7 @@ public class Game {
 		String[] splitted = new String[2];
 
 		while (true) {
-			System.out.println(String.format("%s turn", this.turn.toString()));
+			System.out.println(String.format("%s's turn", this.turn.toString()));
 
 			this.printBoard();
 
@@ -34,17 +37,16 @@ public class Game {
 			command = this.sc.nextLine();
 			splitted = command.split(" ");
 
-			int[] position = {
-				Integer.parseInt(splitted[1]),
-				Integer.parseInt(splitted[0])
-			};
+			int[] position = Arrays.stream(splitted)
+				.mapToInt(s -> Integer.parseInt(s))
+				.toArray();
 
-			if (!BoardHelper.isPositionInsideBoard(position, this.board)) {
+			if (!this.board.isInsideTable(position)) {
 				System.out.println("Position not found");
 				continue;
 			};
 
-			Piece piece = this.board.piece(position);
+			IPiece piece = this.board.findPiece(position);
 
 			if (piece == null) {
 				System.out.println("No piece selected");
@@ -52,29 +54,26 @@ public class Game {
 			}
 
 			if (piece.color() != this.turn) {
-				System.out.println(String.format("Cannot move piece in %s turn", this.turn.toString()));
+				System.out.println(String.format("Cannot move piece in %s's turn", this.turn.toString()));
 				continue;
 			}
 
-			piece.updateMoves(board);
-			System.out.println(piece.moves());
+			piece.updateMoves();
 			this.printBoard(piece);
 
 			System.out.print("To: ");
 			command = this.sc.nextLine();
 			splitted = command.split(" ");
 
-			int[] targetPosition = {
-				Integer.parseInt(splitted[0]),
-				Integer.parseInt(splitted[1])
-			};
+			position = Arrays.stream(splitted)
+				.mapToInt(s -> Integer.parseInt(s))
+				.toArray();
 
-			if (piece.canMove(this.board, targetPosition)) {
-				piece.move(this.board, targetPosition);
+			if (piece.canMove(position)) {
+				PieceMoveCommand moveCommand = piece.move(position);
+
+				this.moveHistory.add(moveCommand);
 				this.toggleTurn();
-
-				for (Piece square : this.boardIterator) {
-				}
 			} else {
 				System.out.println("Invalid move, try again");
 			}
@@ -89,16 +88,28 @@ public class Game {
 		}
 	}
 
-	private void printBoard(Piece piece) {
+	private void resetPieceMoves() {
+		BoardIteratorOverPiece iterator = new BoardIteratorOverPiece(this.board);
+
+		while (iterator.hasNext()) {
+			iterator.next().resetMoves();
+		}
+	}
+
+	private void printBoard(IPiece piece) {
 		int hi = 0;
-		for (int i = 0; i < piece.moves().size(); i++) {
-			System.out.print(i);
-			if (piece.moves().get(i).size() > hi) {
-				hi = piece.moves().get(i).size();
+
+		for (int row = 0; row < piece.moves().size(); row++) {
+			System.out.print(row);
+
+			if (piece.moves().get(row).size() > hi) {
+				hi = piece.moves().get(row).size();
 			}
-			for (int j = 0; j < piece.moves().get(i).size(); j++) {
-				Boolean square = piece.moves().get(i).get(j);
-				if (square) {
+
+			for (int col = 0; col < piece.moves().get(row).size(); col++) {
+				boolean canMove = piece.canMove(new int[]{col, row});
+
+				if (canMove) {
 					System.out.print(Character.toChars(0x2588));
 				} else {
 					System.out.print(' ');
@@ -106,10 +117,13 @@ public class Game {
 			}
 			System.out.println();
 		}
+
 		System.out.print(" ");
+
 		for (int i = 0; i < hi; i++) {
 			System.out.print(i);
 		}
+
 		System.out.println();
 
 		this.printBoard();
@@ -117,21 +131,24 @@ public class Game {
 
 	private void printBoard() {
 		int hi = 0;
-		for (int i = 0; i < this.board.size(); i++) {
-			System.out.print(i);
-			if (this.board.get(i).size() > hi) {
-				hi = this.board.get(i).size();
-			}
-			for (int j = 0; j < this.board.get(i).size(); j++) {
-				Piece square = this.board.get(i).get(j);
 
-				if (Objects.isNull(square)) {
+		for (int i = 0; i < this.board.table().size(); i++) {
+			System.out.print(i);
+
+			if (this.board.table().get(i).size() > hi) {
+				hi = this.board.table().get(i).size();
+			}
+
+			for (int j = 0; j < this.board.table().get(i).size(); j++) {
+				IPiece square = this.board.table().get(i).get(j);
+
+				if (square == null) {
 					System.out.print(' ');
 					continue;
 				}
 
 				Integer code = PieceEnumIconTranslate.book
-					.get(square.fen().toLowerCase());
+					.get(square.fen());
 
 				if (square.color() == ColorEnum.WHITE) {
 					code += 0x6;
@@ -139,12 +156,16 @@ public class Game {
 
 				System.out.print(Character.toChars(code));
 			}
+
 			System.out.println();
 		}
+
 		System.out.print(" ");
+
 		for (int i = 0; i < hi; i++) {
 			System.out.print(i);
 		}
+
 		System.out.println();
 	}
 }
