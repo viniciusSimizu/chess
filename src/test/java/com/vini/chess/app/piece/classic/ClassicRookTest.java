@@ -9,23 +9,20 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.vini.chess.app.board.Board;
-import com.vini.chess.app.board.builder.BoardBuilder;
-import com.vini.chess.app.piece.IPiece;
-import com.vini.chess.app.piece.IPieceFactory;
-import com.vini.chess.app.piece.PieceDecorator;
-import com.vini.chess.app.types.ColorEnum;
-import com.vini.chess.app.types.PieceEnum;
+import com.vini.chess.game.board.Board;
+import com.vini.chess.game.board.BoardBuilder;
+import com.vini.chess.game.enums.ColorEnum;
+import com.vini.chess.game.enums.PieceEnum;
+import com.vini.chess.game.piece.classic.ClassicRook;
 
 public class ClassicRookTest {
-	private IPieceFactory factory = ClassicPieceFactory.getInstance();
-	private IPiece piece;
+	private ClassicRook piece;
 	private BoardBuilder builder;
 
 	@BeforeEach
 	public void setup() {
-		this.builder = new BoardBuilder(this.factory);
-		this.piece = new PieceDecorator(new ClassicRook(this.builder.result()));
+		this.builder = new BoardBuilder();
+		this.piece = new ClassicRook(this.builder.result());
 		this.piece.setColor(ColorEnum.BLACK);
 	}
 
