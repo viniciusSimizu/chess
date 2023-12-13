@@ -8,7 +8,6 @@ import com.vini.game.piece.IPiece;
 public class Game {
 
 	private ColorEnum turn;
-
 	private final Board board;
 
 	public Game(Board board, ColorEnum turn) {
