@@ -7,54 +7,54 @@ import com.vini.game.piece.IPiece;
 
 public class Game {
 
-	private ColorEnum turn;
-	private final Board board;
+  private ColorEnum turn;
+  private final Board board;
 
-	public Game(Board board, ColorEnum turn) {
-		this.board = board;
-		this.turn = turn;
-	}
+  public Game(Board board, ColorEnum turn) {
+    this.board = board;
+    this.turn = turn;
+  }
 
-	public boolean move(int[] sourcePosition, int[] targetPosition) {
-		IPiece piece = this.board.findPiece(sourcePosition);
+  public boolean move(int[] sourcePosition, int[] targetPosition) {
+    IPiece piece = this.board.findPiece(sourcePosition);
 
-		if (piece == null) {
-			return false;
-		}
+    if (piece == null) {
+      return false;
+    }
 
-		if (!piece.canMove(targetPosition)) {
-			return false;
-		}
+    if (!piece.canMove(targetPosition)) {
+      return false;
+    }
 
-		piece.move(targetPosition);
+    piece.move(targetPosition);
 
-		return true;
-	}
+    return true;
+  }
 
-	public void toggleTurn() {
-		if (this.turn == ColorEnum.BLACK) {
-			this.turn = ColorEnum.WHITE;
-		} else {
-			this.turn = ColorEnum.BLACK;
-		}
-	}
+  public void toggleTurn() {
+    if (this.turn == ColorEnum.BLACK) {
+      this.turn = ColorEnum.WHITE;
+    } else {
+      this.turn = ColorEnum.BLACK;
+    }
+  }
 
-	public void refreshPieceMoves() {
-		BoardIteratorOverPiece iterator = new BoardIteratorOverPiece(this.board);
+  public void refreshPieceMoves() {
+    BoardIteratorOverPiece iterator = new BoardIteratorOverPiece(this.board);
 
-		while (iterator.hasNext()) {
-			IPiece piece = iterator.next();
-			piece.resetMoves();
-			piece.updateMoves();
-		}
-	}
+    while (iterator.hasNext()) {
+      IPiece piece = iterator.next();
+      piece.resetMoves();
+      piece.updateMoves();
+    }
+  }
 
-	public void attachGameOverPieces() {
-		BoardIteratorOverPiece iterator = new BoardIteratorOverPiece(this.board);
+  public void attachGameOverPieces() {
+    BoardIteratorOverPiece iterator = new BoardIteratorOverPiece(this.board);
 
-		while (iterator.hasNext()) {
-			IPiece piece = iterator.next();
-			piece.setGame(this);
-		}
-	}
+    while (iterator.hasNext()) {
+      IPiece piece = iterator.next();
+      piece.setGame(this);
+    }
+  }
 }
