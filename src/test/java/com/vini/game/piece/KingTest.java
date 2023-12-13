@@ -13,16 +13,16 @@ import com.vini.game.board.Board;
 import com.vini.game.board.BoardBuilder;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
-import com.vini.game.piece.classic.ClassicKing;
+import com.vini.game.piece.pieces.King;
 
-public class ClassicKingTest {
-	private ClassicKing piece;
+public class KingTest {
+	private King piece;
 	private BoardBuilder builder;
 
 	@BeforeEach
 	public void setup() {
 		this.builder = new BoardBuilder();
-		this.piece = new ClassicKing(this.builder.result());
+		this.piece = new King(this.builder.result());
 		this.piece.setColor(ColorEnum.BLACK);
 	}
 

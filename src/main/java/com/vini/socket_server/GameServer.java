@@ -9,9 +9,8 @@ import java.nio.charset.Charset;
 
 import com.vini.game.Game;
 import com.vini.game.GameManager;
+import com.vini.game.enums.ColorEnum;
 import com.vini.game.fen.Fen;
-import com.vini.game.mode.Mode;
-import com.vini.game.mode.ModeRegistry;
 
 public class GameServer extends Thread {
 	private Socket socket;
@@ -26,9 +25,10 @@ public class GameServer extends Thread {
 		this.out = new PrintWriter(socket.getOutputStream(), true, charset);
 		this.in = new BufferedReader(new InputStreamReader(socket.getInputStream(), charset));
 
-		Mode mode = ModeRegistry.classic;
+		String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+		ColorEnum turn = ColorEnum.WHITE;
 
-		Game game = new Game(Fen.build(mode.fen), mode.turn);
+		Game game = new Game(Fen.build(fen), turn);
 		game.attachGameOverPieces();
 
 		this.gameManager = new GameManager(game, socket);

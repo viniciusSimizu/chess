@@ -1,18 +1,21 @@
-package com.vini.game.piece.classic;
+package com.vini.game.piece.pieces;
 
 import com.vini.game.board.Board;
+import com.vini.game.enums.PieceEnum;
 import com.vini.game.piece.IPiece;
+import com.vini.game.piece.Piece;
 import com.vini.game.piece.PieceHelper;
-import com.vini.game.piece.abstracts.King;
 
-public class ClassicKing extends King {
+public class King extends Piece {
 	private final int[][] directions = {
 		{-1, -1}, {0, -1}, {1, -1},
 		{-1, 0}, {1, 0},
 		{-1, 1}, {0, 1}, {1, 1}
 	};
 
-	public ClassicKing(Board board) {
+	protected boolean isFirstMove = true;
+
+	public King(Board board) {
 		super(board);
 	}
 
@@ -37,6 +40,15 @@ public class ClassicKing extends King {
 		}
 
 		return this;
+	}
+
+	public boolean isFirstMove() {
+		return this.isFirstMove;
+	}
+
+	@Override
+	public PieceEnum fen() {
+		return PieceEnum.KING;
 	}
 }
 

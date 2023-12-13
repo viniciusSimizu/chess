@@ -1,15 +1,22 @@
-package com.vini.game.piece.classic;
+package com.vini.game.piece.pieces;
 
 import com.vini.game.board.Board;
+import com.vini.game.enums.ColorEnum;
+import com.vini.game.enums.PieceEnum;
 import com.vini.game.piece.IPiece;
+import com.vini.game.piece.Piece;
 import com.vini.game.piece.PieceHelper;
-import com.vini.game.piece.abstracts.Pawn;
 
-public class ClassicPawn extends Pawn {
+public class Pawn extends Piece {
 	private final int[][] forkDirections = {{-1, 1}, {1, 1}};
 	private final int[][] enPassantDirections = {{-1, 0}, {1, 0}};
 
-	public ClassicPawn(Board board) {
+	public boolean hasMovedTwo = false;
+
+	protected boolean isFirstMove = true;
+	protected int directionWeight = 1;
+
+	public Pawn(Board board) {
 		super(board);
 	}
 
@@ -84,6 +91,32 @@ public class ClassicPawn extends Pawn {
 		}
 
 		return this;
+	}
+
+	@Override
+	public void move(int[] position) {
+		int heightDiff = Math.abs(position[1] - this.position()[1]);
+		if (this.isFirstMove && heightDiff == 2) {
+			this.hasMovedTwo = true;
+		}
+
+		this.isFirstMove = false;
+	}
+
+	@Override
+	public IPiece setColor(ColorEnum color) {
+		super.setColor(color);
+
+		if (color == ColorEnum.WHITE) {
+			this.directionWeight = -1;
+		}
+
+		return this;
+	}
+
+	@Override
+	public PieceEnum fen() {
+		return PieceEnum.PAWN;
 	}
 }
 

@@ -14,18 +14,18 @@ import com.vini.game.board.Board;
 import com.vini.game.board.BoardBuilder;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
-import com.vini.game.piece.classic.ClassicPawn;
+import com.vini.game.piece.pieces.Pawn;
 
-public class ClassicPawnTest {
+public class PawnTest {
 	private Game game;
-	private ClassicPawn piece;
+	private Pawn piece;
 	private BoardBuilder builder;
 
 	@BeforeEach
 	public void setup() {
 		this.builder = new BoardBuilder();
 		this.game = new Game(this.builder.result(), ColorEnum.BLACK);
-		this.piece = new ClassicPawn(this.builder.result());
+		this.piece = new Pawn(this.builder.result());
 		this.piece
 			.setColor(ColorEnum.BLACK)
 			.setGame(this.game);

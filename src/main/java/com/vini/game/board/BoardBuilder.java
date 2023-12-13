@@ -6,7 +6,7 @@ import java.util.List;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
 import com.vini.game.piece.IPiece;
-import com.vini.game.piece.classic.ClassicPieceFactory;
+import com.vini.game.piece.PieceFactory;
 
 public class BoardBuilder {
 	private Board result;
@@ -14,7 +14,7 @@ public class BoardBuilder {
 	private List<List<IPiece>> table = new ArrayList<>();
 	private List<IPiece> row = new ArrayList<>();
 
-	private ClassicPieceFactory factory = ClassicPieceFactory.getInstance();
+	private PieceFactory factory = PieceFactory.getInstance();
 
 	private int rowIdx = 0;
 	private int colIdx = 0;

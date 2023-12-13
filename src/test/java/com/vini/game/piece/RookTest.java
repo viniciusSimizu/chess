@@ -13,16 +13,16 @@ import com.vini.game.board.Board;
 import com.vini.game.board.BoardBuilder;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
-import com.vini.game.piece.classic.ClassicQueen;
+import com.vini.game.piece.pieces.Rook;
 
-public class ClassicQueenTest {
-	private ClassicQueen piece;
+public class RookTest {
+	private Rook piece;
 	private BoardBuilder builder;
 
 	@BeforeEach
 	public void setup() {
 		this.builder = new BoardBuilder();
-		this.piece = new ClassicQueen(this.builder.result());
+		this.piece = new Rook(this.builder.result());
 		this.piece.setColor(ColorEnum.BLACK);
 	}
 
@@ -46,11 +46,11 @@ public class ClassicQueenTest {
 		List<List<Boolean>> pieceMoves = this.piece.moves();
 
 		List<List<Boolean>> expected = new ArrayList<List<Boolean>>() {{
-			add(Arrays.asList(true, false, true, false, true));
-			add(Arrays.asList(false, true, true, true, false));
+			add(Arrays.asList(false, false, true, false, false));
+			add(Arrays.asList(false, false, true, false, false));
 			add(Arrays.asList(true, true, false, true, true));
-			add(Arrays.asList(false, true, true, true, false));
-			add(Arrays.asList(true, false, true, false, true));
+			add(Arrays.asList(false, false, true, false, false));
+			add(Arrays.asList(false, false, true, false, false));
 		}};
 
 		assertTrue(pieceMoves.equals(expected));
@@ -59,9 +59,9 @@ public class ClassicQueenTest {
 	@Test
 	public void updateMovesWithAlly() {
 		Board board = this.builder
-			.buildEmptySquare().buildEmptySquare().buildEmptySquare().buildRow()
-			.buildPiece(PieceEnum.PAWN, ColorEnum.BLACK).buildPiece(PieceEnum.PAWN, ColorEnum.BLACK).buildEmptySquare().buildRow()
-			.buildEmptySquare().buildEmptySquare().buildPiece(PieceEnum.PAWN, ColorEnum.BLACK).buildRow()
+			.buildEmptySquare().buildRow()
+			.buildPiece(PieceEnum.PAWN, ColorEnum.BLACK).buildRow()
+			.buildEmptySquare().buildRow()
 			.result();
 
 		int[] position = {0, 2};
@@ -74,9 +74,9 @@ public class ClassicQueenTest {
 		List<List<Boolean>> pieceMoves = this.piece.moves();
 
 		List<List<Boolean>> expected = new ArrayList<List<Boolean>>() {{
-			add(Arrays.asList(false, false, false));
-			add(Arrays.asList(false, false, false));
-			add(Arrays.asList(false, true, false));
+			add(Arrays.asList(false));
+			add(Arrays.asList(false));
+			add(Arrays.asList(false));
 		}};
 
 		assertTrue(pieceMoves.equals(expected));
@@ -85,9 +85,9 @@ public class ClassicQueenTest {
 	@Test
 	public void updateMovesWithEnemy() {
 		Board board = this.builder
-			.buildEmptySquare().buildEmptySquare().buildEmptySquare().buildRow()
-			.buildPiece(PieceEnum.PAWN, ColorEnum.WHITE).buildPiece(PieceEnum.PAWN, ColorEnum.WHITE).buildEmptySquare().buildRow()
-			.buildEmptySquare().buildEmptySquare().buildPiece(PieceEnum.PAWN, ColorEnum.WHITE).buildRow()
+			.buildEmptySquare().buildRow()
+			.buildPiece(PieceEnum.PAWN, ColorEnum.WHITE).buildRow()
+			.buildEmptySquare().buildRow()
 			.result();
 
 		int[] position = {0, 2};
@@ -100,9 +100,9 @@ public class ClassicQueenTest {
 		List<List<Boolean>> pieceMoves = this.piece.moves();
 
 		List<List<Boolean>> expected = new ArrayList<List<Boolean>>() {{
-			add(Arrays.asList(false, false, false));
-			add(Arrays.asList(true, true, false));
-			add(Arrays.asList(false, true, true));
+			add(Arrays.asList(false));
+			add(Arrays.asList(true));
+			add(Arrays.asList(false));
 		}};
 
 		assertTrue(pieceMoves.equals(expected));

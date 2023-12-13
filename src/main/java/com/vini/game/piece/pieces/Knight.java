@@ -1,16 +1,17 @@
-package com.vini.game.piece.classic;
+package com.vini.game.piece.pieces;
 
 import com.vini.game.board.Board;
+import com.vini.game.enums.PieceEnum;
 import com.vini.game.piece.IPiece;
+import com.vini.game.piece.Piece;
 import com.vini.game.piece.PieceHelper;
-import com.vini.game.piece.abstracts.Knight;
 
-public class ClassicKnight extends Knight {
+public class Knight extends Piece {
 	private final int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
 	private final int forwardStepWeight = 2;
 	private final int sideStepWeight = 1;
 
-	public ClassicKnight(Board board) {
+	public Knight(Board board) {
 		super(board);
 	}
 
@@ -45,6 +46,11 @@ public class ClassicKnight extends Knight {
 		}
 
 		return this;
+	}
+
+	@Override
+	public PieceEnum fen() {
+		return PieceEnum.KNIGHT;
 	}
 }
 

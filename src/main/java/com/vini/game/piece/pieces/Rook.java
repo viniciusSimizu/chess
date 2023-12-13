@@ -1,14 +1,17 @@
-package com.vini.game.piece.classic;
+package com.vini.game.piece.pieces;
 
 import com.vini.game.board.Board;
+import com.vini.game.enums.PieceEnum;
 import com.vini.game.piece.IPiece;
+import com.vini.game.piece.Piece;
 import com.vini.game.piece.PieceHelper;
-import com.vini.game.piece.abstracts.Bishop;
 
-public class ClassicBishop extends Bishop {
-	private final int[][] directions = {{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
+public class Rook extends Piece {
+	private final int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
 
-	public ClassicBishop(Board board) {
+	protected boolean isFirstMove = true;
+
+	public Rook(Board board) {
 		super(board);
 	}
 
@@ -21,7 +24,7 @@ public class ClassicBishop extends Bishop {
 				position[0] += direction[0];
 				position[1] += direction[1];
 
-				if (!this.board.isInsideTable(position)) {
+				if (!board.isInsideTable(position)) {
 					break;
 				};
 
@@ -40,5 +43,14 @@ public class ClassicBishop extends Bishop {
 		}
 
 		return this;
+	}
+
+	public boolean isFirstMove() {
+		return this.isFirstMove;
+	}
+
+	@Override
+	public PieceEnum fen() {
+		return PieceEnum.ROOK;
 	}
 }

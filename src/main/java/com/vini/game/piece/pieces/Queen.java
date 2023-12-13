@@ -1,14 +1,19 @@
-package com.vini.game.piece.classic;
+package com.vini.game.piece.pieces;
 
 import com.vini.game.board.Board;
+import com.vini.game.enums.PieceEnum;
 import com.vini.game.piece.IPiece;
+import com.vini.game.piece.Piece;
 import com.vini.game.piece.PieceHelper;
-import com.vini.game.piece.abstracts.Rook;
 
-public class ClassicRook extends Rook {
-	private final int[][] directions = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+public class Queen extends Piece {
+	private final int[][] directions = {
+		{-1, -1}, {0, -1}, {1, -1},
+		{-1, 0}, {1, 0},
+		{-1, 1}, {0, 1}, {1, 1}
+	};
 
-	public ClassicRook(Board board) {
+	public Queen(Board board) {
 		super(board);
 	}
 
@@ -32,7 +37,7 @@ public class ClassicRook extends Rook {
 				}
 
 				this.moves().get(position[1]).set(position[0], true);
-
+					
 				if (PieceHelper.isEnemy(this, target)) {
 					break;
 				}
@@ -41,4 +46,10 @@ public class ClassicRook extends Rook {
 
 		return this;
 	}
+
+	@Override
+	public PieceEnum fen() {
+		return PieceEnum.QUEEN;
+	}
 }
+

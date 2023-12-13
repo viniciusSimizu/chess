@@ -6,7 +6,6 @@ import java.util.List;
 import com.vini.game.Game;
 import com.vini.game.board.Board;
 import com.vini.game.enums.ColorEnum;
-import com.vini.game.piece.commands.PieceMoveCommand;
 
 public abstract class Piece implements IPiece {
 	protected Game game;
@@ -26,17 +25,16 @@ public abstract class Piece implements IPiece {
 	}
 
 	@Override
-	public PieceMoveCommand move(int[] position) {
+	public void move(int[] position) {
 		if (!this.canMove(position)) {
-			return null;
+			return;
 		}
 
-		PieceMoveCommand command = new PieceMoveCommand(this.position(), position, this.board);
-		command.execute();
+		this.board.table().get(position[1]).set(position[0], this);
+		this.board.table().get(this.position()[1]).set(this.position()[0], this);
+		this.setPosition(position);
 
 		this.resetMoves();
-
-		return command;
 	}
 
 	@Override

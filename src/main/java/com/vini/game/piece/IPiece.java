@@ -5,7 +5,6 @@ import java.util.List;
 import com.vini.game.Game;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
-import com.vini.game.piece.commands.PieceMoveCommand;
 
 public interface IPiece {
 	public void resetMoves();
@@ -14,7 +13,7 @@ public interface IPiece {
 
 	public IPiece setGame(Game game);
 
-	public PieceMoveCommand move(int[] position);
+	public void move(int[] position);
 	public boolean canMove(int[] position);
 
 	public ColorEnum color();
