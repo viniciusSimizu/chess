@@ -1,10 +1,9 @@
-package com.vini.routes.controller;
-
-import java.io.*;
+package com.vini.server.web.routes.controller;
 
 import com.github.mustachejava.Mustache;
 import com.sun.net.httpserver.HttpExchange;
 import com.vini.shared.DefaultTemplateController;
+import java.io.*;
 
 public class GetIndexHandler extends DefaultTemplateController {
 
@@ -34,8 +33,6 @@ public class GetIndexHandler extends DefaultTemplateController {
   class Variables {
     public String pare;
 
-    public Variables(String pare) {
-      this.pare = pare;
-    }
+    public Variables(String pare) { this.pare = pare; }
   }
 }

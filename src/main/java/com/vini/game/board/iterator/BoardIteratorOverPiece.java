@@ -1,68 +1,67 @@
 package com.vini.game.board.iterator;
 
-import java.util.Iterator;
-
 import com.vini.game.board.Board;
 import com.vini.game.piece.IPiece;
+import java.util.Iterator;
 
 public class BoardIteratorOverPiece implements Iterator<IPiece> {
-	private Board board;
-	private int rowIdx = 0;
-	private int colIdx = 0;
+  private Board board;
+  private int rowIdx = 0;
+  private int colIdx = 0;
 
-	public BoardIteratorOverPiece(Board board) {
-		this.board = board;
-	}
+  public BoardIteratorOverPiece(Board board) { this.board = board; }
 
-	@Override
-	public boolean hasNext() {
-		int rowIdx = this.rowIdx;
-		int colIdx = this.colIdx;
+  @Override
+  public boolean hasNext() {
+    int rowIdx = this.rowIdx;
+    int colIdx = this.colIdx;
 
-		while (true) {
-			if (rowIdx >= this.board.table().size()) {
-				return false;
-			}
+    while (true) {
+      if (rowIdx >= this.board.table().size()) {
+        return false;
+      }
 
-			boolean colInsideRow = colIdx < this.board.table().get(rowIdx).size();
+      boolean colInsideRow = colIdx < this.board.table().get(rowIdx).size();
 
-			if (!colInsideRow) {
-				rowIdx++;
-				colIdx = 0;
-				continue;
-			}
+      if (!colInsideRow) {
+        rowIdx++;
+        colIdx = 0;
+        continue;
+      }
 
-			boolean isPiece = this.board.table().get(rowIdx).get(colIdx) instanceof IPiece;
+      boolean isPiece =
+          this.board.table().get(rowIdx).get(colIdx) instanceof IPiece;
 
-			if (isPiece) {
-				return true;
-			}
+      if (isPiece) {
+        return true;
+      }
 
-			colIdx++;
-		}
-	}
+      colIdx++;
+    }
+  }
 
-	@Override
-	public IPiece next() {
-		if (!this.hasNext()) {
-			return null;
-		}
+  @Override
+  public IPiece next() {
+    if (!this.hasNext()) {
+      return null;
+    }
 
-		while (true) {
-			boolean colInsideRow = this.colIdx < this.board.table().get(this.rowIdx).size();
+    while (true) {
+      boolean colInsideRow =
+          this.colIdx < this.board.table().get(this.rowIdx).size();
 
-			if (!colInsideRow) {
-				this.rowIdx++;
-				this.colIdx = 0;
-				continue;
-			}
+      if (!colInsideRow) {
+        this.rowIdx++;
+        this.colIdx = 0;
+        continue;
+      }
 
-			IPiece square = this.board.table().get(this.rowIdx).get(this.colIdx);
-			this.colIdx++;
+      IPiece square = this.board.table().get(this.rowIdx).get(this.colIdx);
+      this.colIdx++;
 
-			if (square instanceof IPiece) {
-				return square;
-			}
-		}
-	}
+      if (square instanceof IPiece) {
+        return square;
+      }
+    }
+  }
 }

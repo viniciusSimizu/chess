@@ -1,36 +1,32 @@
 package com.vini.game.board;
 
+import com.vini.game.piece.IPiece;
 import java.util.List;
 
-import com.vini.game.piece.IPiece;
-
 public class Board {
-	private final List<List<IPiece>> table;
+  private final List<List<IPiece>> table;
 
-	public Board(List<List<IPiece>> table) {
-		this.table = table;
-	}
+  public Board(List<List<IPiece>> table) { this.table = table; }
 
-	public IPiece findPiece(int[] position) {
-		if (this.isInsideTable(position)) {
-			return this.table().get(position[1]).get(position[0]);
-		}
-		return null;
-	}
+  public IPiece findPiece(int[] position) {
+    if (this.isInsideTable(position)) {
+      return this.table().get(position[1]).get(position[0]);
+    }
+    return null;
+  }
 
-	public boolean isInsideTable(int[] position) {
-		if (position[1] < 0 || position[1] >= this.table().size()) {
-			return false;
-		}
+  public boolean isInsideTable(int[] position) {
+    if (position[1] < 0 || position[1] >= this.table().size()) {
+      return false;
+    }
 
-		if (position[0] >= 0 && position[0] < this.table().get(position[1]).size()) {
-			return true;
-		}
+    if (position[0] >= 0 &&
+        position[0] < this.table().get(position[1]).size()) {
+      return true;
+    }
 
-		return false;
-	}
+    return false;
+  }
 
-	public List<List<IPiece>> table() {
-		return this.table;
-	}
+  public List<List<IPiece>> table() { return this.table; }
 }

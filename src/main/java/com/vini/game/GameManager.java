@@ -1,18 +1,12 @@
 package com.vini.game;
 
-import java.net.Socket;
+import com.vini.server.socket.ActionTypeEnum;
 import java.util.Arrays;
 
-import com.vini.socket.ActionTypeEnum;
-
 public class GameManager {
-  private Game game;
-  private Socket socket;
+  public Game game;
 
-  public GameManager(Game game, Socket socket) {
-    this.game = game;
-    this.socket = socket;
-  }
+  public GameManager(Game game) { this.game = game; }
 
   public boolean action(String message) {
     String[] commands = message.split(";");
@@ -20,11 +14,11 @@ public class GameManager {
     String[] params = Arrays.copyOfRange(commands, 1, commands.length);
 
     switch (ActionTypeEnum.findAction(action)) {
-      case MOVE:
-        return this.actionMove(params);
+    case MOVE:
+      return this.actionMove(params);
 
-      default:
-        return false;
+    default:
+      return false;
     }
   }
 

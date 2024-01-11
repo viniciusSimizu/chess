@@ -9,63 +9,64 @@ import com.vini.game.piece.IPiece;
 import com.vini.game.translate.PieceEnumStringTranslate;
 
 public class Fen {
-	private Fen() {};
+  private Fen(){};
 
-	public static Board build(String fenNotation) {
-		String skips = "";
-		BoardBuilder builder = new BoardBuilder();
+  public static Board build(String fenNotation) {
+    String skips = "";
+    BoardBuilder builder = new BoardBuilder();
 
-		for (int i = 0; i < fenNotation.length(); i++) {
-			char chr = fenNotation.charAt(i);
+    for (int i = 0; i < fenNotation.length(); i++) {
+      char chr = fenNotation.charAt(i);
 
-			if (Character.isDigit(chr)) {
-				skips = skips.concat(Character.toString(chr));
-				continue;
-			}
+      if (Character.isDigit(chr)) {
+        skips = skips.concat(Character.toString(chr));
+        continue;
+      }
 
-			if (!skips.isEmpty()) {
-				for (int j = 0; j < Integer.parseInt(skips); j++) {
-					builder.buildEmptySquare();
-				}
-				skips = "";
-			}
+      if (!skips.isEmpty()) {
+        for (int j = 0; j < Integer.parseInt(skips); j++) {
+          builder.buildEmptySquare();
+        }
+        skips = "";
+      }
 
-			if (chr == '/') {
-				builder.buildRow();
-				continue;
-			}
+      if (chr == '/') {
+        builder.buildRow();
+        continue;
+      }
 
-			PieceEnum piece = PieceEnumStringTranslate.stringToPiece(Character.toString(chr));
+      PieceEnum piece =
+          PieceEnumStringTranslate.stringToPiece(Character.toString(chr));
 
-			if (piece == null) {
-				continue;
-			}
+      if (piece == null) {
+        continue;
+      }
 
-			builder.buildPiece(piece, Fen.notationColor(chr));
-		}
+      builder.buildPiece(piece, Fen.notationColor(chr));
+    }
 
-		if (!skips.isEmpty()) {
-			for (int j = 0; j < Integer.parseInt(skips); j++) {
-				builder.buildEmptySquare();
-			}
-		}
-		builder.buildRow();
+    if (!skips.isEmpty()) {
+      for (int j = 0; j < Integer.parseInt(skips); j++) {
+        builder.buildEmptySquare();
+      }
+    }
+    builder.buildRow();
 
-		Board board = builder.result();
+    Board board = builder.result();
 
-		BoardIteratorOverPiece iterator = new BoardIteratorOverPiece(board);
-		while (iterator.hasNext()) {
-			IPiece piece = iterator.next();
-			piece.structureMoves();
-		}
+    BoardIteratorOverPiece iterator = new BoardIteratorOverPiece(board);
+    while (iterator.hasNext()) {
+      IPiece piece = iterator.next();
+      piece.structureMoves();
+    }
 
-		return board;
-	}
+    return board;
+  }
 
-	private static ColorEnum notationColor(char chr) {
-		if (Character.isLowerCase(chr)) {
-			return ColorEnum.BLACK;
-		}
-		return ColorEnum.WHITE;
-	}
+  private static ColorEnum notationColor(char chr) {
+    if (Character.isLowerCase(chr)) {
+      return ColorEnum.BLACK;
+    }
+    return ColorEnum.WHITE;
+  }
 }

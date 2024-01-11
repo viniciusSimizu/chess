@@ -1,10 +1,10 @@
 package com.vini;
 
-import java.io.IOException;
-
 import com.sun.net.httpserver.HttpServer;
-import com.vini.routes.Routes;
-import com.vini.web.WebServer;
+import com.vini.server.socket.SocketServer;
+import com.vini.server.web.WebServer;
+import com.vini.server.web.routes.Routes;
+import java.io.IOException;
 
 public class App {
   public static void main(String[] args) throws IOException {
@@ -23,8 +23,8 @@ public class App {
   }
 
   private static void startSocketServer() throws IOException {
-    // SocketServer socketServer = new SocketServer();
-    // socketServer.run();
-    // System.out.println("Socket is running");
+    SocketServer socketServer = new SocketServer();
+    socketServer.run();
+    System.out.println("Socket is running");
   }
 }

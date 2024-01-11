@@ -7,44 +7,42 @@ import com.vini.game.piece.Piece;
 import com.vini.game.piece.PieceHelper;
 
 public class Bishop extends Piece {
-	private final int[][] directions = {{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
+  private final int[][] directions = {{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
 
-	public Bishop(Board board) {
-		super(board);
-	}
+  public Bishop(Board board) { super(board); }
 
-	@Override
-	public IPiece updateMoves() {
-		for (int[] direction : this.directions) {
-			int[] position = this.position().clone();
+  @Override
+  public IPiece updateMoves() {
+    for (int[] direction : this.directions) {
+      int[] position = this.position().clone();
 
-			while (true) {
-				position[0] += direction[0];
-				position[1] += direction[1];
+      while (true) {
+        position[0] += direction[0];
+        position[1] += direction[1];
 
-				if (!this.board.isInsideTable(position)) {
-					break;
-				};
+        if (!this.board.isInsideTable(position)) {
+          break;
+        };
 
-				IPiece target = board.findPiece(position);
+        IPiece target = board.findPiece(position);
 
-				if (PieceHelper.isAlly(this, target)) {
-					break;
-				}
+        if (PieceHelper.isAlly(this, target)) {
+          break;
+        }
 
-				this.moves().get(position[1]).set(position[0], true);
+        this.moves().get(position[1]).set(position[0], true);
 
-				if (PieceHelper.isEnemy(this, target)) {
-					break;
-				}
-			}
-		}
+        if (PieceHelper.isEnemy(this, target)) {
+          break;
+        }
+      }
+    }
 
-		return this;
-	}
+    return this;
+  }
 
-	@Override
-	public PieceEnum fen() {
-		return PieceEnum.BISHOP;
-	}
+  @Override
+  public PieceEnum fen() {
+    return PieceEnum.BISHOP;
+  }
 }

@@ -1,12 +1,11 @@
-package com.vini.routes.controller;
+package com.vini.server.web.routes.controller;
 
+import com.sun.net.httpserver.HttpExchange;
+import com.vini.shared.DefaultTemplateController;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-
-import com.sun.net.httpserver.HttpExchange;
-import com.vini.shared.DefaultTemplateController;
 
 public class GetBoardHandler extends DefaultTemplateController {
 
