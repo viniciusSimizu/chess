@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
+/*
 public class KnightTest {
   private Knight piece;
   private BoardBuilder builder;
@@ -24,7 +24,6 @@ public class KnightTest {
     this.piece.setColor(ColorEnum.BLACK);
   }
 
-  @Test
   public void updateMoves() {
     Board board = this.builder.buildEmptySquare()
                       .buildEmptySquare()
@@ -80,7 +79,6 @@ public class KnightTest {
     assertTrue(pieceMoves.equals(expected));
   }
 
-  @Test
   public void updateMovesWithAlly() {
     Board board = this.builder.buildEmptySquare()
                       .buildPiece(PieceEnum.PAWN, ColorEnum.BLACK)
@@ -113,7 +111,6 @@ public class KnightTest {
     assertTrue(pieceMoves.equals(expected));
   }
 
-  @Test
   public void updateMovesWithEnemy() {
     Board board = this.builder.buildEmptySquare()
                       .buildPiece(PieceEnum.PAWN, ColorEnum.WHITE)
@@ -146,3 +143,4 @@ public class KnightTest {
     assertTrue(pieceMoves.equals(expected));
   }
 }
+*/

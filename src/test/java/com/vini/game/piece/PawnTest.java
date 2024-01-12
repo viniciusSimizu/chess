@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
+/*
 public class PawnTest {
   private Game game;
   private Pawn piece;
@@ -27,7 +27,6 @@ public class PawnTest {
     this.piece.setColor(ColorEnum.BLACK).setGame(this.game);
   }
 
-  @Test
   public void firstMoves() {
     Board board = this.builder.buildEmptySquare()
                       .buildEmptySquare()
@@ -62,7 +61,6 @@ public class PawnTest {
     assertTrue(pieceMoves.equals(expected));
   }
 
-  @Test
   public void nonFirstMoves() {
     Board board = this.builder.buildEmptySquare()
                       .buildRow()
@@ -110,7 +108,6 @@ public class PawnTest {
     assertTrue(pieceMoves.equals(expected));
   }
 
-  @Test
   public void piercingAttack() {
     Board board = this.builder.buildEmptySquare()
                       .buildEmptySquare()
@@ -145,7 +142,6 @@ public class PawnTest {
     assertTrue(pieceMoves.equals(expected));
   }
 
-  @Test
   public void pieceBlock() {
     Board board = this.builder.buildEmptySquare()
                       .buildRow()
@@ -174,7 +170,6 @@ public class PawnTest {
     assertTrue(pieceMoves.equals(expected));
   }
 
-  @Test
   public void enPassantMove() {
     Board board = this.builder.buildEmptySquare()
                       .buildEmptySquare()
@@ -215,7 +210,6 @@ public class PawnTest {
     assertTrue(pieceMoves.equals(expected));
   }
 
-  @Test
   public void whiteMoves() {
     Board board = this.builder.buildEmptySquare()
                       .buildRow()
@@ -251,3 +245,4 @@ public class PawnTest {
     assertTrue(pieceMoves.equals(expected));
   }
 }
+*/

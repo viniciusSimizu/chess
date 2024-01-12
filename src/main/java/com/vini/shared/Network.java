@@ -6,11 +6,11 @@ import java.net.UnknownHostException;
 public class Network {
   private static Network INSTANCE;
 
-  public final int PORT;
+  public final int SOCKET_PORT;
   public final InetAddress ADDRESS;
 
   private Network(InetAddress ADDRESS, int PORT) {
-    this.PORT = PORT;
+    this.SOCKET_PORT = PORT;
     this.ADDRESS = ADDRESS;
   }
 
