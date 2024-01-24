@@ -4,20 +4,14 @@ import com.vini.game.board.Board;
 import com.vini.game.board.iterator.BoardIteratorOverPiece;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.piece.IPiece;
-import com.vini.server.socket.PlayerData;
-import java.util.EnumMap;
 
 public class Game {
-
   private ColorEnum turn;
   private final Board board;
-  private final EnumMap<ColorEnum, PlayerData> players;
 
-  public Game(Board board, ColorEnum turn,
-              EnumMap<ColorEnum, PlayerData> players) {
+  public Game(Board board, ColorEnum turn) {
     this.board = board;
     this.turn = turn;
-    this.players = players;
   }
 
   public boolean move(int[] sourcePosition, int[] targetPosition) {

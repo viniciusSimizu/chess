@@ -1,5 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const socket = new WebSocket("ws://127.0.0.1:3000");
+  const host = window.location.hostname;
+  const path = "connections";
+  const socket = new WebSocket(`ws://${host}:3000/${path}`);
 
   socket.onopen = (e) => {
     console.log("connected");

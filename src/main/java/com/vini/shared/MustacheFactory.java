@@ -1,20 +1,23 @@
 package com.vini.shared;
 
 import com.github.mustachejava.DefaultMustacheFactory;
+import com.vini.server.web.routes.controller.PublicFileHandler;
+
 import java.io.File;
 
 public class MustacheFactory {
-  private static DefaultMustacheFactory INSTANCE;
+    private static DefaultMustacheFactory INSTANCE;
+    private static final String TEMPLATES_PATH = "/src/main/resources/templates";
 
-  private MustacheFactory(){};
+    private MustacheFactory() {}
+    ;
 
-  public static DefaultMustacheFactory getInstance() {
-    if (MustacheFactory.INSTANCE == null) {
-      String WORKSPACE_DIRECTORY = System.getProperty("user.dir");
-      String TEMPLATE_ROOT_DIRECTORY = "/assets/templates";
-      File path = new File(WORKSPACE_DIRECTORY + TEMPLATE_ROOT_DIRECTORY);
-      MustacheFactory.INSTANCE = new DefaultMustacheFactory(path);
+    public static DefaultMustacheFactory getInstance() {
+        if (MustacheFactory.INSTANCE == null) {
+            String path = PublicFileHandler.WORKSPACE_DIRECTORY + MustacheFactory.TEMPLATES_PATH;
+            File file = new File(path);
+            MustacheFactory.INSTANCE = new DefaultMustacheFactory(file);
+        }
+        return MustacheFactory.INSTANCE;
     }
-    return MustacheFactory.INSTANCE;
-  }
 }

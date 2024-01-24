@@ -1,35 +1,32 @@
 package com.vini;
 
 import com.sun.net.httpserver.HttpServer;
-import com.vini.server.socket.SocketServer;
 import com.vini.server.web.WebServer;
 import com.vini.server.web.routes.Routes;
+import com.vini.server.web_socket.WebSocketServerImpl;
+
+import org.java_websocket.server.WebSocketServer;
+
 import java.io.IOException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class App {
-  public static void main(String[] args) throws IOException {
-    App.startWebServer();
-    App.startSocketServer();
-  }
+    public static void main(String[] args) throws IOException {
+        App.startWeb();
+        App.startWebSocket();
+    }
 
-  private static void startWebServer() throws IOException {
-    HttpServer webServer = WebServer.createServer();
-    Routes.registerRoutes(webServer);
-    webServer.setExecutor(null);
+    private static void startWeb() throws IOException {
+        HttpServer webServer = WebServer.createServer();
+        Routes.registerRoutes(webServer);
+        webServer.setExecutor(null);
 
-    webServer.start();
+        webServer.start();
 
-    System.out.println("Server is running");
-  }
+        System.out.println("Server is running");
+    }
 
-  private static void startSocketServer() throws IOException {
-    SocketServer socketServer = new SocketServer();
-
-    ExecutorService executorService = Executors.newSingleThreadExecutor();
-    executorService.execute(socketServer);
-
-    System.out.println("Socket is running");
-  }
+    private static void startWebSocket() throws IOException {
+        WebSocketServer webSocketServer = new WebSocketServerImpl();
+        webSocketServer.start();
+    }
 }
