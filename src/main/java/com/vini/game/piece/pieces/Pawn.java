@@ -11,11 +11,10 @@ import com.vini.game.piece.PieceHelper;
 public class Pawn extends Piece {
     private final int[][] forkDirections = {{-1, 1}, {1, 1}};
     private final int[][] enPassantDirections = {{-1, 0}, {1, 0}};
-
-    public boolean hasMovedTwo = false;
-
-    protected boolean isFirstMove = true;
     protected int directionWeight = 1;
+
+    protected Integer movedTwoRound = -1;
+    protected boolean isFirstMoveFlag = true;
 
     public Pawn(Board board) {
         super(board);
@@ -23,8 +22,9 @@ public class Pawn extends Piece {
 
     @Override
     public IPiece updateMoves() {
+        this.resetMoves();
         Position position = new Position(null, null);
-        int maxDistance = this.isFirstMove ? 2 : 1;
+        int maxDistance = this.isFirstMoveFlag ? 2 : 1;
 
         for (int range = 1; range <= maxDistance; range++) {
             position.x = this.position().x.intValue();
@@ -79,7 +79,9 @@ public class Pawn extends Piece {
 
             Pawn pawnTarget = (Pawn) target;
 
-            if (!pawnTarget.hasMovedTwo) {
+            boolean hasMovedTwo = pawnTarget.movedTwoRound != -1;
+            int roundSinceMovedTwo = this.board.getRound() - pawnTarget.movedTwoRound;
+            if (!hasMovedTwo || roundSinceMovedTwo != 1) {
                 continue;
             }
 
@@ -91,6 +93,21 @@ public class Pawn extends Piece {
         }
 
         return this;
+    }
+
+    @Override
+    public boolean tryMove(Position to) {
+        boolean tryingToMoveTwo = Math.abs(this.position.y - to.y) == 2;
+        boolean successMove = super.tryMove(to);
+
+        if (successMove) {
+            this.isFirstMoveFlag = false;
+            if (tryingToMoveTwo) {
+                this.movedTwoRound = this.board.getRound();
+            }
+        }
+
+        return successMove;
     }
 
     @Override

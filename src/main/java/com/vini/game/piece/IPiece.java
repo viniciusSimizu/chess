@@ -11,6 +11,8 @@ public interface IPiece {
 
     public IPiece structureMoves();
 
+		public boolean tryMove(Position position);
+
     public IPiece updateMoves();
 
     public ColorEnum color();

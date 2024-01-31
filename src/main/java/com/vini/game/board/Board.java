@@ -10,6 +10,7 @@ import java.util.List;
 public class Board {
     private final int width, height;
     private final List<List<IPiece>> table;
+    private int round = 0;
     private BoardStateEnum state;
 
     public Board(List<List<IPiece>> table) {
@@ -74,6 +75,14 @@ public class Board {
 
     public BoardIteratorOverPiece iterator() {
         return new BoardIteratorOverPiece(this.table);
+    }
+
+    public int getRound() {
+        return this.round;
+    }
+
+    public void newRound() {
+        this.round++;
     }
 
     class BoardIteratorOverPiece implements Iterator<IPiece> {

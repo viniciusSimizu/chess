@@ -10,9 +10,9 @@ import java.util.List;
 public abstract class Piece implements IPiece {
     protected Board board;
 
-    private ColorEnum color;
-    private final Position position;
-    private List<List<Boolean>> moves;
+    protected ColorEnum color;
+    protected final Position position;
+    protected List<List<Boolean>> moves;
 
     protected Piece(Board board) {
         this.board = board;
@@ -35,6 +35,22 @@ public abstract class Piece implements IPiece {
     }
 
     @Override
+    public boolean tryMove(Position to) {
+        if (!this.canMove(to)) {
+            return false;
+        }
+
+        this.board.trySetPiece(to, this);
+        this.board.trySetPiece(this.position, null);
+        this.position.x = to.x;
+        this.position.y = to.y;
+
+        this.resetMoves();
+
+        return true;
+    }
+
+    @Override
     public void resetMoves() {
         for (int i = 0; i < this.moves().size(); i++) {
             for (int j = 0; j < this.moves().get(i).size(); j++) {
@@ -42,16 +58,6 @@ public abstract class Piece implements IPiece {
             }
         }
         ;
-    }
-
-    @Override
-    public IPiece updateMoves() {
-        if (this.moves.size() == 0) {
-            this.structureMoves();
-        }
-
-        this.resetMoves();
-        return this;
     }
 
     @Override
