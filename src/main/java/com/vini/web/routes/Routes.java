@@ -1,8 +1,8 @@
-package com.vini.server.web.routes;
+package com.vini.web.routes;
 
 import com.sun.net.httpserver.HttpServer;
-import com.vini.server.web.routes.controller.GetIndexHandler;
-import com.vini.server.web.routes.controller.PublicFileHandler;
+import com.vini.web.routes.controller.GetIndexHandler;
+import com.vini.web.routes.controller.PublicFileHandler;
 
 public class Routes {
   public static void registerRoutes(HttpServer httpServer) {

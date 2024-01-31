@@ -1,124 +1,97 @@
 package com.vini.game.piece;
 
-import com.vini.game.Game;
 import com.vini.game.board.Board;
 import com.vini.game.enums.ColorEnum;
+import com.vini.game.lib.Position;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Piece implements IPiece {
-  protected Game game;
-  protected Board board;
+    protected Board board;
 
-  private ColorEnum color;
-  private int[] position = new int[2];
-  private List<List<Boolean>> moves = new ArrayList<>();
+    private ColorEnum color;
+    private final Position position;
+    private List<List<Boolean>> moves;
 
-  protected Piece(Board board) { this.board = board; }
-
-  public IPiece setGame(Game game) {
-    this.game = game;
-    return this;
-  }
-
-  @Override
-  public void move(int[] position) {
-    if (!this.canMove(position)) {
-      return;
+    protected Piece(Board board) {
+        this.board = board;
+        this.position = new Position(null, null);
     }
 
-    this.board.table().get(position[1]).set(position[0], this);
-    this.board.table().get(this.position()[1]).set(this.position()[0], this);
-    this.setPosition(position);
+    @Override
+    public IPiece structureMoves() {
+        this.moves = new ArrayList<>();
 
-    this.resetMoves();
-  }
+        for (int i = 0; i < this.board.getHeight(); i++) {
+            List<Boolean> row = new ArrayList<>();
+            for (int j = 0; j < this.board.getWidth(); j++) {
+                row.add(false);
+            }
+            this.moves.add(row);
+        }
 
-  @Override
-  public boolean canMove(int[] position) {
-    if (this.isInsideMoves(position)) {
-      return this.moves().get(position[1]).get(position[0]);
+        return this;
     }
 
-    return false;
-  }
-
-  @Override
-  public IPiece structureMoves() {
-    List<List<Boolean>> moves = new ArrayList<List<Boolean>>();
-    List<Boolean> row = new ArrayList<>();
-
-    for (int i = 0; i < this.board.table().size(); i++) {
-      for (int j = 0; j < this.board.table().get(i).size(); j++) {
-        row.add(false);
-      }
-      moves.add(row);
-      row = new ArrayList<>();
+    @Override
+    public void resetMoves() {
+        for (int i = 0; i < this.moves().size(); i++) {
+            for (int j = 0; j < this.moves().get(i).size(); j++) {
+                this.moves().get(i).set(j, false);
+            }
+        }
+        ;
     }
 
-    this.setMoves(moves);
-    return this;
-  }
+    @Override
+    public IPiece updateMoves() {
+        if (this.moves.size() == 0) {
+            this.structureMoves();
+        }
 
-  @Override
-  public void resetMoves() {
-    for (int i = 0; i < this.moves().size(); i++) {
-      for (int j = 0; j < this.moves().get(i).size(); j++) {
-        this.moves().get(i).set(j, false);
-      }
-    };
-  }
-
-  @Override
-  public IPiece updateMoves() {
-    if (this.moves.size() == 0) {
-      this.structureMoves();
+        this.resetMoves();
+        return this;
     }
 
-    this.resetMoves();
-    return this;
-  }
-
-  @Override
-  public ColorEnum color() {
-    return this.color;
-  }
-  @Override
-  public IPiece setColor(ColorEnum color) {
-    this.color = color;
-    return this;
-  }
-
-  @Override
-  public int[] position() {
-    return this.position;
-  }
-  @Override
-  public IPiece setPosition(int[] position) {
-    this.position = position;
-    return this;
-  }
-
-  @Override
-  public List<List<Boolean>> moves() {
-    return this.moves;
-  }
-  @Override
-  public IPiece setMoves(List<List<Boolean>> moves) {
-    this.moves = moves;
-    return this;
-  }
-
-  protected boolean isInsideMoves(int[] position) {
-    if (position[1] < 0 || position[1] >= this.moves().size()) {
-      return false;
+    @Override
+    public ColorEnum color() {
+        return this.color;
     }
 
-    if (position[0] >= 0 &&
-        position[0] < this.moves().get(position[1]).size()) {
-      return true;
+    @Override
+    public IPiece setColor(ColorEnum color) {
+        this.color = color;
+        return this;
     }
 
-    return false;
-  }
+    @Override
+    public Position position() {
+        return this.position;
+    }
+
+    @Override
+    public boolean canMove(Position position) {
+        if (!this.isInsideMoves(position)) {
+            return false;
+        }
+        return this.moves().get(position.y).get(position.x);
+    }
+
+    @Override
+    public List<List<Boolean>> moves() {
+        return this.moves;
+    }
+
+    protected boolean isInsideMoves(Position position) {
+        if (position.y < 0 || position.y >= this.moves().size()) {
+            return false;
+        }
+
+        if (position.x >= 0 && position.x < this.moves().get(position.y).size()) {
+            return true;
+        }
+
+        return false;
+    }
 }

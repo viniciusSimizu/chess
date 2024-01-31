@@ -1,4 +1,4 @@
-package com.vini.server.web.routes.controller;
+package com.vini.web.routes.controller;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;

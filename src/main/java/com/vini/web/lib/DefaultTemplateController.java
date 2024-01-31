@@ -1,4 +1,4 @@
-package com.vini.shared;
+package com.vini.web.lib;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.sun.net.httpserver.HttpHandler;

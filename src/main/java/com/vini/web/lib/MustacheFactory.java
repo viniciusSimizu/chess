@@ -1,7 +1,7 @@
-package com.vini.shared;
+package com.vini.web.lib;
 
 import com.github.mustachejava.DefaultMustacheFactory;
-import com.vini.server.web.routes.controller.PublicFileHandler;
+import com.vini.web.routes.controller.PublicFileHandler;
 
 import java.io.File;
 

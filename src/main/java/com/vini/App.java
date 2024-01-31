@@ -1,32 +1,50 @@
 package com.vini;
 
 import com.sun.net.httpserver.HttpServer;
-import com.vini.server.web.WebServer;
-import com.vini.server.web.routes.Routes;
-import com.vini.server.web_socket.WebSocketServerImpl;
+import com.vini.shared.Env;
+import com.vini.socket.SocketServer;
+import com.vini.web.WebServer;
+import com.vini.web.routes.Routes;
 
 import org.java_websocket.server.WebSocketServer;
 
 import java.io.IOException;
 
 public class App {
-    public static void main(String[] args) throws IOException {
-        App.startWeb();
-        App.startWebSocket();
+
+    private static int HTTP_PORT, SOCKET_PORT, BACKLOGS;
+
+    public static void main(String[] args) {
+        loadEnv();
+
+        try {
+            startWeb();
+            startSocket();
+        } catch (IOException e) {
+            System.exit(0);
+        }
     }
 
     private static void startWeb() throws IOException {
-        HttpServer webServer = WebServer.createServer();
-        Routes.registerRoutes(webServer);
-        webServer.setExecutor(null);
+        WebServer webServer = new WebServer(HTTP_PORT, BACKLOGS);
 
-        webServer.start();
+        HttpServer server = webServer.createServer();
+        Routes.registerRoutes(server);
+        server.setExecutor(null);
+
+        server.start();
 
         System.out.println("Server is running");
     }
 
-    private static void startWebSocket() throws IOException {
-        WebSocketServer webSocketServer = new WebSocketServerImpl();
+    private static void startSocket() {
+        WebSocketServer webSocketServer = new SocketServer(SOCKET_PORT);
         webSocketServer.start();
+    }
+
+    private static void loadEnv() {
+        SOCKET_PORT = Integer.parseInt(Env.get("SOCKET_PORT"));
+        HTTP_PORT = Integer.parseInt(Env.get("SERVER_PORT"));
+        BACKLOGS = Integer.parseInt(Env.get("SERVER_BACKLOGS"));
     }
 }

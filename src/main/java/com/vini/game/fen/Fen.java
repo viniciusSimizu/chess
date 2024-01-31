@@ -9,6 +9,8 @@ import com.vini.game.piece.IPiece;
 import com.vini.game.translate.PieceEnumStringTranslate;
 
 public class Fen {
+	public static final String defaultNotation = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
+
   private Fen(){};
 
   public static Board build(String fenNotation) {
