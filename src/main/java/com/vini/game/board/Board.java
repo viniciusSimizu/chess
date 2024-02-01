@@ -1,24 +1,19 @@
 package com.vini.game.board;
 
+import com.vini.game.board.iterators.BoardIteratorOverPiece;
 import com.vini.game.enums.BoardStateEnum;
 import com.vini.game.lib.Position;
 import com.vini.game.piece.IPiece;
 
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-    private final int width, height;
-    private final List<List<IPiece>> table;
-    private int round = 0;
-    private BoardStateEnum state;
 
-    public Board(List<List<IPiece>> table) {
-        this.table = table;
-        this.state = BoardStateEnum.ON_GOING;
-        this.height = table.size();
-        this.width = table.get(0).size();
-    }
+    private List<List<IPiece>> table;
+    private Integer width, height;
+    private int round = 0;
+    private BoardStateEnum state = BoardStateEnum.ON_GOING;
 
     public IPiece findPiece(Position position) {
         if (this.isInsideTable(position)) {
@@ -27,25 +22,28 @@ public class Board {
         return null;
     }
 
-    public boolean trySetPiece(Position position, IPiece piece) {
-        if (!this.isInsideTable(position)) {
+    public boolean tryMovePiece(Position from, Position to) {
+        if (!this.isInsideTable(to)) {
             return false;
         }
 
-        this.table.get(position.y).set(position.x, piece);
+        IPiece piece = this.findPiece(from);
+        if (piece == null) {
+            return false;
+        }
 
-        return true;
+        return piece.tryMove(to);
     }
 
     public BoardStateEnum getState() {
         return this.state;
     }
 
-    public int getHeight() {
+    public Integer getHeight() {
         return this.height;
     }
 
-    public int getWidth() {
+    public Integer getWidth() {
         return this.width;
     }
 
@@ -61,19 +59,16 @@ public class Board {
         return false;
     }
 
-    public void updateState() {
-        this.updatePieceMovements();
-    }
-
-    private void updatePieceMovements() {
-        BoardIteratorOverPiece iterator = this.iterator();
+    public void updatePieceMovements() {
+        BoardIteratorOverPiece iterator = this.iteratorOverPiece();
         while (iterator.hasNext()) {
             IPiece piece = iterator.next();
+            piece.resetMoves();
             piece.updateMoves();
         }
     }
 
-    public BoardIteratorOverPiece iterator() {
+    public BoardIteratorOverPiece iteratorOverPiece() {
         return new BoardIteratorOverPiece(this.table);
     }
 
@@ -85,63 +80,32 @@ public class Board {
         this.round++;
     }
 
-    class BoardIteratorOverPiece implements Iterator<IPiece> {
-        private List<List<IPiece>> table;
-        private int rowIdx = 0, colIdx = 0;
+    public void setTable(List<List<IPiece>> table) {
+        this.table = table;
+        this.height = table.size();
+        this.width = table.get(0).size();
 
-        public BoardIteratorOverPiece(List<List<IPiece>> table) {
-            this.table = table;
+        BoardIteratorOverPiece iterator = this.iteratorOverPiece();
+        while (iterator.hasNext()) {
+            IPiece piece = iterator.next();
+            piece.structureMoves();
         }
+    }
 
-        @Override
-        public boolean hasNext() {
-            int rowIdx = this.rowIdx;
-            int colIdx = this.colIdx;
+    public List<List<String>> tableIdentifiers() {
+        List<List<String>> tableIdentifiers = new ArrayList<>(this.getHeight());
+        for (List<IPiece> row : this.table) {
+            List<String> rowIdentifiers = new ArrayList<>(this.getWidth());
+            tableIdentifiers.add(rowIdentifiers);
 
-            while (true) {
-                boolean rowInsideTable = rowIdx < this.table.size();
-                if (!rowInsideTable) {
-                    return false;
-                }
-
-                boolean colInsideRow = colIdx < this.table.get(rowIdx).size();
-                if (!colInsideRow) {
-                    rowIdx++;
-                    colIdx = 0;
-                    continue;
-                }
-
-                boolean isPiece = this.table.get(rowIdx).get(colIdx) instanceof IPiece;
-
-                if (isPiece) {
-                    return true;
-                }
-
-                colIdx++;
-            }
-        }
-
-        @Override
-        public IPiece next() {
-            if (!this.hasNext()) {
-                return null;
-            }
-
-            while (true) {
-                boolean colInsideRow = this.colIdx < this.table.get(this.rowIdx).size();
-                if (!colInsideRow) {
-                    this.rowIdx++;
-                    this.colIdx = 0;
-                    continue;
-                }
-
-                IPiece square = this.table.get(this.rowIdx).get(this.colIdx);
-                this.colIdx++;
-
-                if (square instanceof IPiece) {
-                    return square;
+            for (IPiece square : row) {
+                if (square == null) {
+                    rowIdentifiers.add("square");
+                } else {
+                    rowIdentifiers.add(square.getIdentifier());
                 }
             }
         }
+        return tableIdentifiers;
     }
 }

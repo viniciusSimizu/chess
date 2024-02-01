@@ -9,18 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BoardBuilder {
-    private Board result;
-
-    private List<List<IPiece>> table = new ArrayList<>();
-    private List<IPiece> row = new ArrayList<>();
-
-    private PieceFactory factory = PieceFactory.getInstance();
 
     private int rowIdx = 0, colIdx = 0;
 
-    public BoardBuilder() {
-        this.result = new Board(this.table);
-    }
+    private Board board = new Board();
+    private PieceFactory factory = PieceFactory.getInstance();
+    private List<List<IPiece>> table = new ArrayList<>();
+    private List<IPiece> row = new ArrayList<>();
 
     public BoardBuilder buildRow() {
         this.table.add(this.row);
@@ -41,22 +36,22 @@ public class BoardBuilder {
         IPiece buildingPiece;
         switch (piece) {
             case PAWN:
-                buildingPiece = this.factory.makePawn(this.result());
+                buildingPiece = this.factory.makePawn(this.board, color);
                 break;
             case ROOK:
-                buildingPiece = this.factory.makeRook(this.result());
+                buildingPiece = this.factory.makeRook(this.board, color);
                 break;
             case KNIGHT:
-                buildingPiece = this.factory.makeKnight(this.result());
+                buildingPiece = this.factory.makeKnight(this.board, color);
                 break;
             case BISHOP:
-                buildingPiece = this.factory.makeBishop(this.result());
+                buildingPiece = this.factory.makeBishop(this.board, color);
                 break;
             case QUEEN:
-                buildingPiece = this.factory.makeQueen(this.result());
+                buildingPiece = this.factory.makeQueen(this.board, color);
                 break;
             case KING:
-                buildingPiece = this.factory.makeKing(this.result());
+                buildingPiece = this.factory.makeKing(this.board, color);
                 break;
             default:
                 return this;
@@ -64,14 +59,14 @@ public class BoardBuilder {
 
         buildingPiece.position().x = this.colIdx;
         buildingPiece.position().y = this.rowIdx;
-        buildingPiece.setColor(color);
 
         this.row.add(buildingPiece);
         this.colIdx++;
         return this;
     }
 
-    public Board result() {
-        return this.result;
+    public Board getResult() {
+        this.board.setTable(this.table);
+        return this.board;
     }
 }

@@ -3,9 +3,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const path = "connections";
   const socket = new WebSocket(`ws://${host}:3000/${path}`);
 
-  socket.onopen = (e) => {
+  const movement = {
+    from: { x: null, y: null },
+    to: { x: null, y: null },
+  };
+
+  socket.onopen = () => {
     console.log("connected");
-    socket.send("estevan");
+    htmx.trigger("#mainContent", "connected");
   };
 
   socket.onmessage = (e) => {

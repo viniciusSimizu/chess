@@ -10,15 +10,13 @@
 	</head>
 	<body>
 		<h2>Welcome to chess 2</h2>
-		<!--
-			<div
-			hx-get="/board"
-			hx-trigger="load"
-			hx-swap="outerHTML"
-			hx-push-url="true"
-			>
-			Awaiting page request
-			</div>
-		-->
+		<div
+				id="mainContent"
+				hx-get="/board"
+				hx-trigger="connected"
+				hx-swap="outerHTML"
+				>
+				Awaiting page request
+		</div>
 	</body>
 </html>

@@ -1,22 +1,19 @@
 package com.vini.socket;
 
-import com.vini.socket.lib.GameManager;
-import com.vini.socket.lib.MessageQueue;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vini.game.gamemodes.SoloGameMode;
+import com.vini.game.interfaces.IGameMode;
+import com.vini.socket.dtos.MovementDTO;
+import com.vini.socket.models.GameModel;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SocketServer extends WebSocketServer {
-
-    private static int MAX_CONNECTIONS = 16;
-
-    private List<WebSocket> connections = new ArrayList<>(MAX_CONNECTIONS);
-    private MessageQueue messageQueue;
 
     public SocketServer(int socketPort) {
         super(new InetSocketAddress(socketPort));
@@ -24,42 +21,49 @@ public class SocketServer extends WebSocketServer {
 
     @Override
     public void onStart() {
-        this.messageQueue = new MessageQueue();
-        Runnable matchMakingRunnable = new GameManager(this.messageQueue);
-        Thread matchMakingThread = new Thread(matchMakingRunnable);
-        matchMakingThread.start();
-
         Runtime.getRuntime().addShutdownHook(new Thread(this.shutdown()));
         System.out.println("Socket is running");
     }
 
     @Override
     public void onOpen(WebSocket connection, ClientHandshake handshake) {
-        this.connections.add(connection);
-        System.out.println("onOpen");
+        IGameMode game = new SoloGameMode(connection);
+        GameModel.INSTANCE = game;
     }
 
     @Override
     public void onMessage(WebSocket connection, String message) {
-        this.messageQueue.put(connection, message);
-        System.out.println("onMessage");
+        try {
+            ObjectMapper objMapper = new ObjectMapper();
+            MovementDTO movement = objMapper.readValue(message, MovementDTO.class);
+            GameModel.INSTANCE.move(movement.getFrom(), movement.getTo());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onClose(WebSocket connection, int code, String reason, boolean remote) {
-        this.connections.remove(connection);
         System.out.println("onClose");
     }
 
     @Override
     public void onError(WebSocket connection, Exception exception) {
-        this.connections.remove(connection);
         System.out.println("onError");
+        connection.close(1013);
     }
 
     private Runnable shutdown() {
         return () -> {
-            this.connections.forEach(socket -> socket.close(1013));
+            this.getConnections().forEach(socket -> socket.close(1013));
+            while (this.getConnections().stream().anyMatch(c -> !c.isClosed())) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
         };
     }
 }

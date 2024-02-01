@@ -2,17 +2,11 @@ package com.vini.game.interfaces;
 
 import com.vini.game.lib.Position;
 
-import java.util.UUID;
+import java.util.List;
 
 public interface IGameMode {
 
-    boolean hasPermissionToMove(UUID userId);
+    void move(Position from, Position to);
 
-    boolean tryMove(UUID userId, Position from, Position to);
-
-    void toggleColor();
-
-    void won(UUID userId);
-
-    void draw();
+    List<List<String>> export();
 }

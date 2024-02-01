@@ -12,17 +12,17 @@ public enum PieceEnum {
   public String toString() {
     switch (this) {
     case PAWN:
-      return "Pawn";
+      return "pawn";
     case ROOK:
-      return "Rook";
+      return "rook";
     case KNIGHT:
-      return "Knight";
+      return "knight";
     case BISHOP:
-      return "Bishop";
+      return "bishop";
     case QUEEN:
-      return "Queen";
+      return "queen";
     case KING:
-      return "King";
+      return "king";
     default:
       return null;
     }

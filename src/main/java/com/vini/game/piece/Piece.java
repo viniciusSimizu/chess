@@ -14,8 +14,9 @@ public abstract class Piece implements IPiece {
     protected final Position position;
     protected List<List<Boolean>> moves;
 
-    protected Piece(Board board) {
+    protected Piece(Board board, ColorEnum color) {
         this.board = board;
+        this.color = color;
         this.position = new Position(null, null);
     }
 
@@ -40,8 +41,8 @@ public abstract class Piece implements IPiece {
             return false;
         }
 
-        this.board.trySetPiece(to, this);
-        this.board.trySetPiece(this.position, null);
+        this.board.tryMovePiece(to, this.position());
+        this.board.tryMovePiece(this.position, null);
         this.position.x = to.x;
         this.position.y = to.y;
 
@@ -66,18 +67,11 @@ public abstract class Piece implements IPiece {
     }
 
     @Override
-    public IPiece setColor(ColorEnum color) {
-        this.color = color;
-        return this;
-    }
-
-    @Override
     public Position position() {
         return this.position;
     }
 
-    @Override
-    public boolean canMove(Position position) {
+    protected boolean canMove(Position position) {
         if (!this.isInsideMoves(position)) {
             return false;
         }

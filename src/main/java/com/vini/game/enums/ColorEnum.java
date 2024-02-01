@@ -8,9 +8,9 @@ public enum ColorEnum {
   public String toString() {
     switch (this) {
     case WHITE:
-      return "White";
+      return "white";
     case BLACK:
-      return "Black";
+      return "black";
     default:
       return null;
     }

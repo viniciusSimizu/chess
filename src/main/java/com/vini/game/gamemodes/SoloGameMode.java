@@ -4,22 +4,21 @@ import com.vini.game.board.Board;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.fen.Fen;
 import com.vini.game.interfaces.IGameMode;
-import com.vini.game.lib.PlayerData;
 import com.vini.game.lib.Position;
 import com.vini.game.piece.IPiece;
 
+import org.java_websocket.WebSocket;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class SoloGameMode implements IGameMode {
 
-    private UUID id;
     private Board board;
-    private List<PlayerData> players;
-    private ColorEnum currColor;
+    private WebSocket player;
+    private ColorEnum currColor = ColorEnum.WHITE;
 
-    private static final List<ColorEnum> colorOrder =
+    private static final List<ColorEnum> COLOR_ORDER =
             new ArrayList<>() {
                 {
                     add(ColorEnum.WHITE);
@@ -27,70 +26,41 @@ public class SoloGameMode implements IGameMode {
                 }
             };
 
-    public SoloGameMode(List<PlayerData> players) {
-        this.id = UUID.randomUUID();
+    public SoloGameMode(WebSocket socket) {
+        this.player = socket;
         this.board = Fen.build(Fen.defaultNotation);
-        this.players = players;
-        this.currColor = ColorEnum.WHITE;
     }
 
     @Override
-    public boolean hasPermissionToMove(UUID id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'hasPermissionToMove'");
-    }
-
-    @Override
-    public boolean tryMove(UUID userId, Position from, Position to) {
-        if (!this.hasPermissionToMove(userId)) {
-            return false;
-        }
-
+    public void move(Position from, Position to) {
         IPiece piece = this.board.findPiece(from);
         if (piece == null) {
-            return false;
+            return;
         }
 
-        boolean hasMoved = this.board.trySetPiece(to, piece);
+        if (piece.color() != this.currColor) {
+            return;
+        }
+
+        boolean hasMoved = this.board.tryMovePiece(from, to);
         if (!hasMoved) {
-            return false;
-        }
-        this.board.trySetPiece(from, null);
-
-        this.board.updateState();
-        switch (this.board.getState()) {
-            case WONNED:
-                this.won(userId);
-                break;
-
-            case DRAWNED:
-                this.draw();
-                break;
-
-            default:
-                this.toggleColor();
-                break;
+            return;
         }
 
-        return true;
+        this.board.newRound();
+        this.toggleColor();
+        this.board.updatePieceMovements();
+        this.player.send("RELOAD");
     }
 
-    @Override
     public void toggleColor() {
-        int colorIdx = colorOrder.indexOf(this.currColor);
-        int nextIdx = (colorIdx + 1) % colorOrder.size();
-        this.currColor = colorOrder.get(nextIdx);
+        int colorIdx = COLOR_ORDER.indexOf(this.currColor);
+        int nextIdx = (colorIdx + 1) % COLOR_ORDER.size();
+        this.currColor = COLOR_ORDER.get(nextIdx);
     }
 
     @Override
-    public void won(UUID id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'won'");
-    }
-
-    @Override
-    public void draw() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'draw'");
+    public List<List<String>> export() {
+        return this.board.tableIdentifiers();
     }
 }

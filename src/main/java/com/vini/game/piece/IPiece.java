@@ -1,7 +1,6 @@
 package com.vini.game.piece;
 
 import com.vini.game.enums.ColorEnum;
-import com.vini.game.enums.PieceEnum;
 import com.vini.game.lib.Position;
 
 import java.util.List;
@@ -11,19 +10,15 @@ public interface IPiece {
 
     public IPiece structureMoves();
 
-		public boolean tryMove(Position position);
+    public boolean tryMove(Position position);
 
     public IPiece updateMoves();
 
     public ColorEnum color();
 
-    public IPiece setColor(ColorEnum color);
-
     public Position position();
-
-		public boolean canMove(Position position);
 
     public List<List<Boolean>> moves();
 
-    public PieceEnum fen();
+    public String getIdentifier();
 }

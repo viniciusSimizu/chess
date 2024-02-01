@@ -1,6 +1,7 @@
 package com.vini.game.piece.pieces;
 
 import com.vini.game.board.Board;
+import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
 import com.vini.game.lib.Position;
 import com.vini.game.piece.IPiece;
@@ -8,10 +9,11 @@ import com.vini.game.piece.Piece;
 import com.vini.game.piece.PieceHelper;
 
 public class Bishop extends Piece {
+
     private final int[][] directions = {{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
 
-    public Bishop(Board board) {
-        super(board);
+    public Bishop(Board board, ColorEnum color) {
+        super(board, color);
     }
 
     @Override
@@ -48,7 +50,7 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public PieceEnum fen() {
-        return PieceEnum.BISHOP;
+    public String getIdentifier() {
+        return String.join(" ", PieceEnum.BISHOP.toString(), this.color().toString());
     }
 }

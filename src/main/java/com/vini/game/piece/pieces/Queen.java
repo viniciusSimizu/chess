@@ -1,6 +1,7 @@
 package com.vini.game.piece.pieces;
 
 import com.vini.game.board.Board;
+import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
 import com.vini.game.lib.Position;
 import com.vini.game.piece.IPiece;
@@ -8,13 +9,14 @@ import com.vini.game.piece.Piece;
 import com.vini.game.piece.PieceHelper;
 
 public class Queen extends Piece {
+
     private final int[][] directions = {
         {-1, -1}, {0, -1}, {1, -1}, {-1, 0},
         {1, 0}, {-1, 1}, {0, 1}, {1, 1}
     };
 
-    public Queen(Board board) {
-        super(board);
+    public Queen(Board board, ColorEnum color) {
+        super(board, color);
     }
 
     @Override
@@ -51,7 +53,7 @@ public class Queen extends Piece {
     }
 
     @Override
-    public PieceEnum fen() {
-        return PieceEnum.QUEEN;
+    public String getIdentifier() {
+        return String.join(" ", PieceEnum.QUEEN.toString(), this.color().toString());
     }
 }

@@ -8,8 +8,28 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PublicFileHandler implements HttpHandler {
-    public static final String WORKSPACE_DIRECTORY = System.getProperty("user.dir");
     private static final String RESOURCES_PATH = "/src/main/resources/static";
+    public static final String WORKSPACE_DIRECTORY = System.getProperty("user.dir");
+
+    public static byte[] readFile(String context) throws IOException {
+        byte[] body;
+
+        StringBuilder path = new StringBuilder();
+        path.append(PublicFileHandler.WORKSPACE_DIRECTORY);
+        path.append(PublicFileHandler.RESOURCES_PATH);
+        path.append(context);
+
+        FileReader file = new FileReader(path.toString());
+        StringBuilder content = new StringBuilder();
+
+        for (int nextChar = file.read(); nextChar != -1; nextChar = file.read()) {
+            content.append((char) nextChar);
+        }
+        file.close();
+
+        body = content.toString().getBytes();
+        return body;
+    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {

@@ -2,73 +2,62 @@ package com.vini.game.fen;
 
 import com.vini.game.board.Board;
 import com.vini.game.board.BoardBuilder;
-import com.vini.game.board.iterator.BoardIteratorOverPiece;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
 import com.vini.game.piece.IPiece;
 import com.vini.game.translate.PieceEnumStringTranslate;
 
+import java.util.Iterator;
+
 public class Fen {
-	public static final String defaultNotation = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
-  private Fen(){};
+    private Fen() {}
+    ;
 
-  public static Board build(String fenNotation) {
-    String skips = "";
-    BoardBuilder builder = new BoardBuilder();
+    public static final String defaultNotation = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
-    for (int i = 0; i < fenNotation.length(); i++) {
-      char chr = fenNotation.charAt(i);
+    public static Board build(String fenNotation) throws IllegalArgumentException {
 
-      if (Character.isDigit(chr)) {
-        skips = skips.concat(Character.toString(chr));
-        continue;
-      }
+        BoardBuilder builder = new BoardBuilder();
 
-      if (!skips.isEmpty()) {
-        for (int j = 0; j < Integer.parseInt(skips); j++) {
-          builder.buildEmptySquare();
+        for (char chr : fenNotation.toCharArray()) {
+            if (Character.isDigit(chr)) {
+                for (int j = 0; j < Character.getNumericValue(chr); j++) {
+                    builder.buildEmptySquare();
+                }
+                continue;
+            }
+
+            if (chr == '/') {
+                builder.buildRow();
+                continue;
+            }
+
+            PieceEnum piece = PieceEnumStringTranslate.stringToPiece(Character.toString(chr));
+
+            if (piece == null) {
+                throw new IllegalArgumentException("Invalid data: %s".formatted(chr));
+            }
+
+            builder.buildPiece(piece, Fen.notationColor(chr));
         }
-        skips = "";
-      }
-
-      if (chr == '/') {
         builder.buildRow();
-        continue;
-      }
 
-      PieceEnum piece =
-          PieceEnumStringTranslate.stringToPiece(Character.toString(chr));
+        Board board = builder.getResult();
 
-      if (piece == null) {
-        continue;
-      }
+        Iterator<IPiece> iterator = board.iteratorOverPiece();
+        while (iterator.hasNext()) {
+            IPiece piece = iterator.next();
+            piece.structureMoves();
+        }
 
-      builder.buildPiece(piece, Fen.notationColor(chr));
+        return board;
     }
 
-    if (!skips.isEmpty()) {
-      for (int j = 0; j < Integer.parseInt(skips); j++) {
-        builder.buildEmptySquare();
-      }
+    private static ColorEnum notationColor(char chr) {
+        if (Character.isLowerCase(chr)) {
+            return ColorEnum.BLACK;
+        }
+        return ColorEnum.WHITE;
     }
-    builder.buildRow();
-
-    Board board = builder.result();
-
-    BoardIteratorOverPiece iterator = new BoardIteratorOverPiece(board);
-    while (iterator.hasNext()) {
-      IPiece piece = iterator.next();
-      piece.structureMoves();
-    }
-
-    return board;
-  }
-
-  private static ColorEnum notationColor(char chr) {
-    if (Character.isLowerCase(chr)) {
-      return ColorEnum.BLACK;
-    }
-    return ColorEnum.WHITE;
-  }
 }

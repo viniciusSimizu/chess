@@ -1,14 +1,24 @@
 package com.vini.game.lib;
 
-import com.vini.game.enums.ColorEnum;
-
-import java.util.UUID;
 
 import org.java_websocket.WebSocket;
 
+import java.util.UUID;
+
 public class PlayerData {
 
-    private UUID id;
-    private ColorEnum color;
-		private WebSocket socket;
+    private UUID id = UUID.randomUUID();
+    private WebSocket socket;
+
+    public PlayerData(WebSocket socket) {
+        this.socket = socket;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public WebSocket getSocket() {
+        return socket;
+    }
 }
