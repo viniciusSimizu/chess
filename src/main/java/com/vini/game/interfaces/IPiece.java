@@ -10,9 +10,9 @@ public interface IPiece {
 
     public void resetMoves();
 
-		public void setColor(ColorEnum color);
+    public void setColor(ColorEnum color);
 
-		public void setBoard(Board board);
+    public void setBoard(Board board);
 
     public boolean tryMove(Position position);
 
@@ -24,5 +24,5 @@ public interface IPiece {
 
     public IPiece updateMoves();
 
-    public List<List<Boolean>> getMoves();
+    public List<Boolean> getMoves();
 }

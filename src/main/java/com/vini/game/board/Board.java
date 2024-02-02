@@ -3,8 +3,8 @@ package com.vini.game.board;
 import com.vini.game.board.iterators.BoardIteratorOverPiece;
 import com.vini.game.interfaces.IPiece;
 import com.vini.game.lib.Position;
+import com.vini.socket.lib.TableRepresentation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
@@ -39,6 +39,10 @@ public class Board {
 
     public Integer getWidth() {
         return this.width;
+    }
+
+    public int getPositionIndex(Position position) {
+        return position.y * this.getWidth() + position.x;
     }
 
     public boolean isInsideTable(Position position) {
@@ -86,22 +90,7 @@ public class Board {
         }
     }
 
-    public List<List<String>> getRepresentation() {
-        var representation = new ArrayList<List<String>>(this.height);
-        for (int i = 0; i < this.height; i++) {
-
-            var row = new ArrayList<String>(this.width);
-            representation.add(row);
-            for (int j = 0; j < this.width; j++) {
-
-                var piece = this.pieces.get(this.width * i + j);
-                if (piece == null) {
-                    row.add(null);
-                } else {
-                    row.add(piece.getIdentifier());
-                }
-            }
-        }
-        return representation;
+    public TableRepresentation export() {
+        return new TableRepresentation(this);
     }
 }

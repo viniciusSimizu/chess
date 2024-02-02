@@ -2,7 +2,7 @@ package com.vini.web.routes.controller;
 
 import com.github.mustachejava.Mustache;
 import com.sun.net.httpserver.HttpExchange;
-import com.vini.socket.lib.TableRepresentation;
+import com.vini.game.board.Board;
 import com.vini.socket.models.GameModel;
 import com.vini.web.lib.MvcController;
 
@@ -24,9 +24,9 @@ public class GetBoardHandler extends MvcController {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();
                 Writer writer = new OutputStreamWriter(out); ) {
 
-            TableRepresentation representation = GameModel.INSTANCE.export();
+            Board board = GameModel.INSTANCE.getBoard();
 
-            this.template.execute(writer, representation).flush();
+            this.template.execute(writer, board.export()).flush();
             byte[] page = out.toByteArray();
 
             exchange.sendResponseHeaders(200, page.length);

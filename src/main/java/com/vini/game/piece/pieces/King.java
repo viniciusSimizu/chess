@@ -32,7 +32,7 @@ public class King extends Piece {
                 continue;
             }
 
-            this.getMoves().get(position.y).set(position.x, true);
+            this.moves.set(this.board.getPositionIndex(position), true);
         }
 
         return this;

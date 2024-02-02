@@ -35,7 +35,7 @@ public class Queen extends Piece {
                     break;
                 }
 
-                this.getMoves().get(position.y).set(position.x, true);
+                this.moves.set(this.board.getPositionIndex(position), true);
 
                 if (PieceHelper.isEnemy(this, target)) {
                     break;

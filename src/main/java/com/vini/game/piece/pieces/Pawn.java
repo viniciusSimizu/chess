@@ -48,7 +48,7 @@ public class Pawn extends Piece {
                 break;
             }
 
-            this.getMoves().get(position.y).set(position.x, true);
+            this.moves.set(this.board.getPositionIndex(position), true);
         }
 
         for (int[] forkDirection : this.forkDirections) {
@@ -64,7 +64,7 @@ public class Pawn extends Piece {
             IPiece target = board.findPiece(position);
 
             if (PieceHelper.isEnemy(this, target)) {
-                this.getMoves().get(position.y).set(position.x, true);
+                this.moves.set(this.board.getPositionIndex(position), true);
             }
         }
 
@@ -94,7 +94,7 @@ public class Pawn extends Piece {
             int backupY = position.y.intValue();
             position.y += this.directionWeight;
 
-            this.getMoves().get(position.y).set(position.x, true);
+            this.moves.set(this.board.getPositionIndex(position), true);
             position.y = backupY;
         }
 

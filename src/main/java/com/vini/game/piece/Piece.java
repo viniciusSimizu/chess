@@ -12,33 +12,23 @@ public abstract class Piece implements IPiece {
 
     protected Board board;
     protected ColorEnum color;
-    protected List<List<Boolean>> moves;
-    protected final Position position;
-
-    protected Piece() {
-        this.position = new Position(null, null);
-    }
+    protected List<Boolean> moves;
+    protected final Position position = new Position(null, null);
 
     @Override
     public void setBoard(Board board) {
         this.board = board;
+        this.moves = new ArrayList<>(board.getHeight() * board.getWidth());
 
-        this.moves = new ArrayList<>();
-        for (int i = 0; i < this.board.getHeight(); i++) {
-            List<Boolean> row = new ArrayList<>();
-            for (int j = 0; j < this.board.getWidth(); j++) {
-                row.add(false);
-            }
-            this.moves.add(row);
+        for (int i = 0; i < board.getHeight() * board.getWidth(); i++) {
+            this.moves.add(false);
         }
     }
 
     @Override
     public void resetMoves() {
-        for (int i = 0; i < this.getMoves().size(); i++) {
-            for (int j = 0; j < this.getMoves().get(i).size(); j++) {
-                this.getMoves().get(i).set(j, false);
-            }
+        for (int i = 0; i < this.moves.size(); i++) {
+            this.moves.set(i, false);
         }
     }
 
@@ -73,26 +63,14 @@ public abstract class Piece implements IPiece {
     }
 
     @Override
-    public List<List<Boolean>> getMoves() {
+    public List<Boolean> getMoves() {
         return this.moves;
     }
 
     protected boolean canMove(Position position) {
-        if (!this.isInsideMoves(position)) {
+        if (!this.board.isInsideTable(position)) {
             return false;
         }
-        return this.getMoves().get(position.y).get(position.x);
-    }
-
-    protected boolean isInsideMoves(Position position) {
-        if (position.y < 0 || position.y >= this.getMoves().size()) {
-            return false;
-        }
-
-        if (position.x >= 0 && position.x < this.getMoves().get(position.y).size()) {
-            return true;
-        }
-
-        return false;
+        return this.moves.get(this.board.getPositionIndex(position));
     }
 }

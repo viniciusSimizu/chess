@@ -6,7 +6,6 @@ import com.vini.game.fen.Fen;
 import com.vini.game.interfaces.IGameMode;
 import com.vini.game.interfaces.IPiece;
 import com.vini.game.lib.Position;
-import com.vini.socket.lib.TableRepresentation;
 
 import java.util.List;
 
@@ -16,10 +15,6 @@ public class SoloGameMode implements IGameMode {
 
     private Board board = Fen.build(Fen.defaultNotation);
     private ColorEnum currColor = ColorEnum.WHITE;
-
-    public SoloGameMode() {
-        this.export();
-    }
 
     @Override
     public void move(Position from, Position to) {
@@ -49,7 +44,7 @@ public class SoloGameMode implements IGameMode {
     }
 
     @Override
-    public TableRepresentation export() {
-        return new TableRepresentation(this.board);
+    public Board getBoard() {
+        return this.board;
     }
 }
