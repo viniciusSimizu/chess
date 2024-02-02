@@ -10,28 +10,45 @@ import java.util.List;
 
 public class BoardBuilder {
 
-    private int rowIdx = 0, colIdx = 0;
-    private Board board = new Board();
+    private Integer width;
+    private int columnIdx, rowIdx;
+    private Board board;
+    private List<IPiece> pieces;
     private PieceFactory factory = PieceFactory.getInstance();
-    private List<List<IPiece>> table = new ArrayList<>();
-    private List<IPiece> row = new ArrayList<>();
 
-    public BoardBuilder buildRow() {
-        this.table.add(this.row);
-        this.row = new ArrayList<>();
+    public BoardBuilder() {
+        this.reset();
+    }
 
-        this.rowIdx++;
-        this.colIdx = 0;
+    public BoardBuilder buildRow() throws IllegalArgumentException {
+        if (this.width == null) {
+            this.width = columnIdx;
+        }
+
+        if (this.columnIdx < this.width) {
+            throw new IllegalArgumentException("Row with less squares than others");
+        }
+
+        columnIdx = 0;
+        rowIdx++;
         return this;
     }
 
-    public BoardBuilder buildEmptySquare() {
-        this.row.add(null);
-        this.colIdx++;
+    public BoardBuilder buildEmptySquare() throws IllegalArgumentException {
+        if (!this.canInsert()) {
+            throw new IllegalArgumentException("Row with more squares than others");
+        }
+        this.pieces.add(null);
+        this.columnIdx++;
         return this;
     }
 
-    public BoardBuilder buildPiece(PieceEnum piece, ColorEnum color) {
+    public BoardBuilder buildPiece(PieceEnum piece, ColorEnum color)
+            throws IllegalArgumentException {
+        if (!this.canInsert()) {
+            throw new IllegalArgumentException("Row with more squares than others");
+        }
+
         IPiece buildingPiece;
         switch (piece) {
             case PAWN:
@@ -56,16 +73,39 @@ public class BoardBuilder {
                 return this;
         }
 
-        buildingPiece.getPosition().x = this.colIdx;
-        buildingPiece.getPosition().y = this.rowIdx;
-
-        this.row.add(buildingPiece);
-        this.colIdx++;
+        buildingPiece.getPosition().x = this.rowIdx;
+        buildingPiece.getPosition().y = this.columnIdx;
+        this.pieces.add(buildingPiece);
+        this.columnIdx++;
         return this;
     }
 
-    public Board getResult() {
-        this.board.setTable(this.table);
-        return this.board;
+    public Board getResult() throws IllegalArgumentException {
+        if (this.canInsert()) {
+            throw new IllegalArgumentException("Unbalanced board");
+        }
+        this.board.setPieces(this.pieces, this.rowIdx, this.width);
+
+        Board board = this.board;
+        this.reset();
+        return board;
+    }
+
+    public BoardBuilder reset() {
+        this.board = new Board();
+        this.pieces = new ArrayList<>();
+        this.width = null;
+        this.columnIdx = this.rowIdx = 0;
+        return this;
+    }
+
+    private boolean canInsert() {
+        if (this.width == null) {
+            return true;
+        }
+        if (this.columnIdx < this.width) {
+            return true;
+        }
+        return false;
     }
 }

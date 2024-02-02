@@ -46,10 +46,6 @@ public class SoloGameMode implements IGameMode {
 
     @Override
     public TableRepresentation export() {
-        TableRepresentation representation = new TableRepresentation();
-        representation.rows = this.board.getHeight();
-        representation.columns = this.board.getWidth();
-        representation.representation = this.board.getRepresentation();
-        return representation;
+			return new TableRepresentation(this.board);
     }
 }

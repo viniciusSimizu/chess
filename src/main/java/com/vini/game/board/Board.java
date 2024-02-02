@@ -9,13 +9,13 @@ import java.util.List;
 
 public class Board {
 
-    private List<List<IPiece>> table;
+    private List<IPiece> pieces;
     private Integer width, height;
     private int round = 0;
 
     public IPiece findPiece(Position position) {
         if (this.isInsideTable(position)) {
-            return this.table.get(position.y).get(position.x);
+            return this.pieces.get(this.width * position.y + position.x);
         }
         return null;
     }
@@ -42,11 +42,11 @@ public class Board {
     }
 
     public boolean isInsideTable(Position position) {
-        if (position.y < 0 || position.y >= this.table.size()) {
+        if (position.x == null || position.y == null) {
             return false;
         }
 
-        if (position.x >= 0 && position.x < this.table.get(position.y).size()) {
+        if (position.x < this.width && position.y < this.height) {
             return true;
         }
 
@@ -63,7 +63,7 @@ public class Board {
     }
 
     public BoardIteratorOverPiece iteratorOverPiece() {
-        return new BoardIteratorOverPiece(this.table);
+        return new BoardIteratorOverPiece(this.pieces);
     }
 
     public int getRound() {
@@ -74,10 +74,10 @@ public class Board {
         this.round++;
     }
 
-    public void setTable(List<List<IPiece>> table) {
-        this.table = table;
-        this.height = table.size();
-        this.width = table.get(0).size();
+    public void setPieces(List<IPiece> pieces, int height, int width) {
+        this.pieces = pieces;
+        this.height = height;
+        this.width = width;
 
         BoardIteratorOverPiece iterator = this.iteratorOverPiece();
         while (iterator.hasNext()) {
@@ -86,17 +86,22 @@ public class Board {
         }
     }
 
-    public List<String> getRepresentation() {
-        List<String> squareIdentifiers = new ArrayList<>(this.getHeight() * this.getWidth());
-        for (List<IPiece> row : this.table) {
-            for (IPiece square : row) {
-                if (square == null) {
-                    squareIdentifiers.add(null);
+    public List<List<String>> getRepresentation() {
+        var representation = new ArrayList<List<String>>(this.height);
+        for (int i = 0; i < this.height; i++) {
+
+            var row = new ArrayList<String>(this.width);
+            representation.add(row);
+            for (int j = 0; j < this.width; j++) {
+
+                var piece = this.pieces.get(this.width * i + j);
+                if (piece == null) {
+                    row.add(null);
                 } else {
-                    squareIdentifiers.add(square.getIdentifier());
+                    row.add(piece.getIdentifier());
                 }
             }
         }
-        return squareIdentifiers;
+        return representation;
     }
 }

@@ -1,44 +1,30 @@
 package com.vini.game.board.iterators;
 
+import com.vini.game.interfaces.IPiece;
+
 import java.util.Iterator;
 import java.util.List;
 
-import com.vini.game.interfaces.IPiece;
-
 public class BoardIteratorOverPiece implements Iterator<IPiece> {
-    private List<List<IPiece>> table;
-    private int rowIdx = 0, colIdx = 0;
 
-    public BoardIteratorOverPiece(List<List<IPiece>> table) {
-        this.table = table;
+    private int currIndex = 0;
+    private List<IPiece> pieces;
+
+    public BoardIteratorOverPiece(List<IPiece> pieces) {
+        this.pieces = pieces;
     }
 
     @Override
     public boolean hasNext() {
-        int rowIdx = this.rowIdx;
-        int colIdx = this.colIdx;
+        int localIndex = this.currIndex;
 
-        while (true) {
-            boolean rowInsideTable = rowIdx < this.table.size();
-            if (!rowInsideTable) {
-                return false;
-            }
-
-            boolean colInsideRow = colIdx < this.table.get(rowIdx).size();
-            if (!colInsideRow) {
-                rowIdx++;
-                colIdx = 0;
-                continue;
-            }
-
-            boolean isPiece = this.table.get(rowIdx).get(colIdx) instanceof IPiece;
-
-            if (isPiece) {
+        while (localIndex < this.pieces.size()) {
+            if (this.pieces.get(localIndex) != null) {
                 return true;
             }
-
-            colIdx++;
+            localIndex++;
         }
+        return false;
     }
 
     @Override
@@ -47,20 +33,16 @@ public class BoardIteratorOverPiece implements Iterator<IPiece> {
             return null;
         }
 
-        while (true) {
-            boolean colInsideRow = this.colIdx < this.table.get(this.rowIdx).size();
-            if (!colInsideRow) {
-                this.rowIdx++;
-                this.colIdx = 0;
-                continue;
-            }
+        IPiece piece = null;
+        while (this.currIndex < this.pieces.size()) {
 
-            IPiece square = this.table.get(this.rowIdx).get(this.colIdx);
-            this.colIdx++;
+            piece = this.pieces.get(this.currIndex);
+            this.currIndex++;
 
-            if (square instanceof IPiece) {
-                return square;
+            if (piece != null) {
+                return piece;
             }
         }
+        return null;
     }
 }
