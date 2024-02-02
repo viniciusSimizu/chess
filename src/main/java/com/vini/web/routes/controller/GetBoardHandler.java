@@ -64,10 +64,14 @@ public class GetBoardHandler extends MvcController {
 
         class Square {
 
+            public boolean isPiece = false;
             public String identifiers;
 
             public Square(String identifiers) {
                 this.identifiers = identifiers;
+								if (identifiers != null && !identifiers.isEmpty()) {
+									this.isPiece = true;
+								}
             }
         }
     }

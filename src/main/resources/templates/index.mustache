@@ -3,6 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="assets/static/css/reset.css">
 		<link rel="stylesheet" type="text/css" href="assets/static/css/global.css">
 		<link rel="stylesheet" type="text/css" href="assets/static/css/pieces.css">
 		<title>Chess 2</title>
@@ -10,14 +11,14 @@
 		<script type="text/javascript" src="assets/static/js/client.js"></script>
 	</head>
 	<body>
-		<h2>Welcome to chess 2</h2>
 		<div
 				id="mainContent"
 				hx-get="/board"
 				hx-trigger="connected"
 				hx-swap="outerHTML"
 				>
-				Awaiting page request
+				<h2>Welcome to chess 2</h2>
+				<span>Awaiting page request</span>
 		</div>
 	</body>
 </html>

@@ -7,10 +7,12 @@
 		{{#rows}}
 		<tr>
 			{{#squares}}
-			<td class="piece {{identifiers}}"></td>
-			{{/squares}}
-			{{^squares}}
-			<td class="square"></td>
+				{{#isPiece}}
+					<td class="piece {{identifiers}}"></td>
+				{{/isPiece}}
+				{{^isPiece}}
+					<td class="square"></td>
+				{{/isPiece}}
 			{{/squares}}
 		</tr>
 		{{/rows}}
