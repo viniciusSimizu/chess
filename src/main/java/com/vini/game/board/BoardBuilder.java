@@ -29,8 +29,8 @@ public class BoardBuilder {
             throw new IllegalArgumentException("Row with less squares than others");
         }
 
-        columnIdx = 0;
-        rowIdx++;
+        this.columnIdx = 0;
+        this.rowIdx++;
         return this;
     }
 
@@ -81,7 +81,7 @@ public class BoardBuilder {
     }
 
     public Board getResult() throws IllegalArgumentException {
-        if (this.canInsert()) {
+        if (this.columnIdx != 0 && this.canInsert()) {
             throw new IllegalArgumentException("Unbalanced board");
         }
         this.board.setPieces(this.pieces, this.rowIdx, this.width);

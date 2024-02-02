@@ -17,6 +17,10 @@ public class SoloGameMode implements IGameMode {
     private Board board = Fen.build(Fen.defaultNotation);
     private ColorEnum currColor = ColorEnum.WHITE;
 
+    public SoloGameMode() {
+        this.export();
+    }
+
     @Override
     public void move(Position from, Position to) {
         IPiece piece = this.board.findPiece(from);
@@ -46,6 +50,6 @@ public class SoloGameMode implements IGameMode {
 
     @Override
     public TableRepresentation export() {
-			return new TableRepresentation(this.board);
+        return new TableRepresentation(this.board);
     }
 }
