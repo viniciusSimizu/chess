@@ -1,10 +1,8 @@
 package com.vini.game.piece.pieces;
 
-import com.vini.game.board.Board;
-import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
+import com.vini.game.interfaces.IPiece;
 import com.vini.game.lib.Position;
-import com.vini.game.piece.IPiece;
 import com.vini.game.piece.Piece;
 import com.vini.game.piece.PieceHelper;
 
@@ -12,16 +10,12 @@ public class Bishop extends Piece {
 
     private final int[][] directions = {{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
 
-    public Bishop(Board board, ColorEnum color) {
-        super(board, color);
-    }
-
     @Override
     public IPiece updateMoves() {
         Position position = new Position(null, null);
         for (int[] direction : this.directions) {
-            position.x = this.position().x.intValue();
-            position.y = this.position().y.intValue();
+            position.x = this.getPosition().x.intValue();
+            position.y = this.getPosition().y.intValue();
 
             while (true) {
                 position.x += direction[0];
@@ -38,7 +32,7 @@ public class Bishop extends Piece {
                     break;
                 }
 
-                this.moves().get(position.y).set(position.x, true);
+                this.getMoves().get(position.y).set(position.x, true);
 
                 if (PieceHelper.isEnemy(this, target)) {
                     break;
@@ -51,6 +45,6 @@ public class Bishop extends Piece {
 
     @Override
     public String getIdentifier() {
-        return String.join(" ", PieceEnum.BISHOP.toString(), this.color().toString());
+        return String.join(" ", PieceEnum.BISHOP.toString(), this.getColor().toString());
     }
 }

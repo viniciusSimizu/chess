@@ -2,9 +2,7 @@ package com.vini.socket;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vini.game.gamemodes.SoloGameMode;
-import com.vini.game.interfaces.IGameMode;
-import com.vini.socket.dtos.MovementDTO;
+import com.vini.socket.lib.Movement;
 import com.vini.socket.models.GameModel;
 
 import org.java_websocket.WebSocket;
@@ -27,16 +25,17 @@ public class SocketServer extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket connection, ClientHandshake handshake) {
-        IGameMode game = new SoloGameMode(connection);
-        GameModel.INSTANCE = game;
+        System.out.println("onOpen");
     }
 
     @Override
     public void onMessage(WebSocket connection, String message) {
         try {
             ObjectMapper objMapper = new ObjectMapper();
-            MovementDTO movement = objMapper.readValue(message, MovementDTO.class);
+            Movement movement = objMapper.readValue(message, Movement.class);
             GameModel.INSTANCE.move(movement.getFrom(), movement.getTo());
+
+            this.broadcast("RELOAD");
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }

@@ -2,6 +2,7 @@ package com.vini.web.routes.controller;
 
 import com.github.mustachejava.Mustache;
 import com.sun.net.httpserver.HttpExchange;
+import com.vini.socket.lib.TableRepresentation;
 import com.vini.socket.models.GameModel;
 import com.vini.web.lib.MvcController;
 
@@ -25,7 +26,7 @@ public class GetBoardHandler extends MvcController {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();
                 Writer writer = new OutputStreamWriter(out); ) {
 
-            List<List<String>> table = GameModel.INSTANCE.export();
+            TableRepresentation table = GameModel.INSTANCE.export();
             ViewData data = new ViewData(table);
 
             this.template.execute(writer, data).flush();
@@ -39,27 +40,30 @@ public class GetBoardHandler extends MvcController {
     }
 
     class ViewData {
-        public List<Row> table = new ArrayList<>();
 
-        public ViewData(List<List<String>> table) {
-            for (List<String> row : table) {
-                Row rowData = new Row(row);
-                this.table.add(rowData);
+        public List<Row> rows = new ArrayList<>();
+
+        public ViewData(TableRepresentation table) {
+            for (int i = 0; i < table.rows; i++) {
+                var rowSquares =
+                        table.representation.subList(table.columns * i, table.columns * (i + 1));
+                this.rows.add(new Row(rowSquares));
             }
         }
 
         class Row {
-            public List<Square> row = new ArrayList<>();
 
-            public Row(List<String> row) {
-                for (String identifiers : row) {
-                    Square squareData = new Square(identifiers);
-                    this.row.add(squareData);
+            public List<Square> squares = new ArrayList<>();
+
+            public Row(List<String> squares) {
+                for (String identifiers : squares) {
+                    this.squares.add(new Square(identifiers));
                 }
             }
         }
 
         class Square {
+
             public String identifiers;
 
             public Square(String identifiers) {

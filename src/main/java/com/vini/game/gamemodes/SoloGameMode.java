@@ -4,32 +4,18 @@ import com.vini.game.board.Board;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.fen.Fen;
 import com.vini.game.interfaces.IGameMode;
+import com.vini.game.interfaces.IPiece;
 import com.vini.game.lib.Position;
-import com.vini.game.piece.IPiece;
+import com.vini.socket.lib.TableRepresentation;
 
-import org.java_websocket.WebSocket;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class SoloGameMode implements IGameMode {
 
-    private Board board;
-    private WebSocket player;
+    private static final List<ColorEnum> COLOR_ORDER = List.of(ColorEnum.WHITE, ColorEnum.BLACK);
+
+    private Board board = Fen.build(Fen.defaultNotation);
     private ColorEnum currColor = ColorEnum.WHITE;
-
-    private static final List<ColorEnum> COLOR_ORDER =
-            new ArrayList<>() {
-                {
-                    add(ColorEnum.WHITE);
-                    add(ColorEnum.BLACK);
-                }
-            };
-
-    public SoloGameMode(WebSocket socket) {
-        this.player = socket;
-        this.board = Fen.build(Fen.defaultNotation);
-    }
 
     @Override
     public void move(Position from, Position to) {
@@ -38,7 +24,7 @@ public class SoloGameMode implements IGameMode {
             return;
         }
 
-        if (piece.color() != this.currColor) {
+        if (piece.getColor() != this.currColor) {
             return;
         }
 
@@ -50,7 +36,6 @@ public class SoloGameMode implements IGameMode {
         this.board.newRound();
         this.toggleColor();
         this.board.updatePieceMovements();
-        this.player.send("RELOAD");
     }
 
     public void toggleColor() {
@@ -60,7 +45,11 @@ public class SoloGameMode implements IGameMode {
     }
 
     @Override
-    public List<List<String>> export() {
-        return this.board.tableIdentifiers();
+    public TableRepresentation export() {
+        TableRepresentation representation = new TableRepresentation();
+        representation.rows = this.board.getHeight();
+        representation.columns = this.board.getWidth();
+        representation.representation = this.board.getRepresentation();
+        return representation;
     }
 }

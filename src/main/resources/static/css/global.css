@@ -1,9 +1,13 @@
-#game {
+#board {
   width: 30rem;
   height: 30rem;
+	border-spacing: 0;
+	border-width: 0;
+	border-radius: 8px;
+	overflow: hidden;
 }
 
-#game
+#board
   :is(
     tr:nth-child(odd) td:nth-child(odd),
     tr:nth-child(even) td:nth-child(even)
@@ -11,10 +15,16 @@
   background-color: #ffe;
 }
 
-#game
+#board
   :is(
     tr:nth-child(odd) td:nth-child(even),
     tr:nth-child(even) td:nth-child(odd)
   ) {
   background-color: #191;
+}
+
+#board .piece {
+	background-size: contain;
+	background-repeat: no-repeat;
+	cursor: pointer;
 }

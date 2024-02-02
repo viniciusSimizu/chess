@@ -1,7 +1,7 @@
 package com.vini.game.piece;
 
-import com.vini.game.board.Board;
 import com.vini.game.enums.ColorEnum;
+import com.vini.game.interfaces.IPiece;
 import com.vini.game.piece.pieces.Bishop;
 import com.vini.game.piece.pieces.King;
 import com.vini.game.piece.pieces.Knight;
@@ -21,27 +21,39 @@ public class PieceFactory {
         return PieceFactory.instance;
     }
 
-    public IPiece makePawn(Board board, ColorEnum color) {
-        return new Pawn(board, color);
+    public IPiece makePawn(ColorEnum color) {
+        Pawn pawn = new Pawn();
+        pawn.setColor(color);
+        return pawn;
     }
 
-    public IPiece makeRook(Board board, ColorEnum color) {
-        return new Rook(board, color);
+    public IPiece makeRook(ColorEnum color) {
+        Rook rook = new Rook();
+        rook.setColor(color);
+        return rook;
     }
 
-    public IPiece makeKnight(Board board, ColorEnum color) {
-        return new Knight(board, color);
+    public IPiece makeKnight(ColorEnum color) {
+        Knight knight = new Knight();
+        knight.setColor(color);
+        return knight;
     }
 
-    public IPiece makeBishop(Board board, ColorEnum color) {
-        return new Bishop(board, color);
+    public IPiece makeBishop(ColorEnum color) {
+        Bishop bishop = new Bishop();
+        bishop.setColor(color);
+        return bishop;
     }
 
-    public IPiece makeQueen(Board board, ColorEnum color) {
-        return new Queen(board, color);
+    public IPiece makeQueen(ColorEnum color) {
+        Queen queen = new Queen();
+        queen.setColor(color);
+        return queen;
     }
 
-    public IPiece makeKing(Board board, ColorEnum color) {
-        return new King(board, color);
+    public IPiece makeKing(ColorEnum color) {
+        King king = new King();
+        king.setColor(color);
+        return king;
     }
 }

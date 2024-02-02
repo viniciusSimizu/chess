@@ -1,10 +1,8 @@
 package com.vini.game.piece.pieces;
 
-import com.vini.game.board.Board;
-import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
+import com.vini.game.interfaces.IPiece;
 import com.vini.game.lib.Position;
-import com.vini.game.piece.IPiece;
 import com.vini.game.piece.Piece;
 import com.vini.game.piece.PieceHelper;
 
@@ -16,16 +14,12 @@ public class King extends Piece {
     };
     private boolean isFirstMove = true;
 
-    public King(Board board, ColorEnum color) {
-        super(board, color);
-    }
-
     @Override
     public IPiece updateMoves() {
         Position position = new Position(null, null);
         for (int[] direction : this.directions) {
-            position.x = this.position().x.intValue() + direction[0];
-            position.y = this.position().y.intValue() + direction[1];
+            position.x = this.getPosition().x.intValue() + direction[0];
+            position.y = this.getPosition().y.intValue() + direction[1];
 
             if (!board.isInsideTable(position)) {
                 continue;
@@ -38,7 +32,7 @@ public class King extends Piece {
                 continue;
             }
 
-            this.moves().get(position.y).set(position.x, true);
+            this.getMoves().get(position.y).set(position.x, true);
         }
 
         return this;
@@ -50,6 +44,6 @@ public class King extends Piece {
 
     @Override
     public String getIdentifier() {
-        return String.join(" ", PieceEnum.KING.toString(), this.color().toString());
+        return String.join(" ", PieceEnum.KING.toString(), this.getColor().toString());
     }
 }

@@ -1,4 +1,4 @@
-package com.vini.socket.dtos;
+package com.vini.socket.lib;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -8,7 +8,7 @@ import com.vini.game.lib.Position;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MovementDTO {
+public class Movement {
 
     @JsonIgnore private Position from = new Position(null, null);
     @JsonIgnore private Position to = new Position(null, null);

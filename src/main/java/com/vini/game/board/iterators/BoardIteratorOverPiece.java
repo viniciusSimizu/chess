@@ -1,9 +1,9 @@
 package com.vini.game.board.iterators;
 
-import com.vini.game.piece.IPiece;
-
 import java.util.Iterator;
 import java.util.List;
+
+import com.vini.game.interfaces.IPiece;
 
 public class BoardIteratorOverPiece implements Iterator<IPiece> {
     private List<List<IPiece>> table;

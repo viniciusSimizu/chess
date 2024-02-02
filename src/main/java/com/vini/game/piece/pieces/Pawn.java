@@ -1,10 +1,9 @@
 package com.vini.game.piece.pieces;
 
-import com.vini.game.board.Board;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
+import com.vini.game.interfaces.IPiece;
 import com.vini.game.lib.Position;
-import com.vini.game.piece.IPiece;
 import com.vini.game.piece.Piece;
 import com.vini.game.piece.PieceHelper;
 
@@ -17,9 +16,9 @@ public class Pawn extends Piece {
     private Integer movedTwoRound = -1;
     private boolean isFirstMoveFlag = true;
 
-    public Pawn(Board board, ColorEnum color) {
-        super(board, color);
-
+    @Override
+    public void setColor(ColorEnum color) {
+        super.setColor(color);
         if (color == ColorEnum.WHITE) {
             this.directionWeight = -1;
         } else {
@@ -34,8 +33,8 @@ public class Pawn extends Piece {
         int maxDistance = this.isFirstMoveFlag ? 2 : 1;
 
         for (int range = 1; range <= maxDistance; range++) {
-            position.x = this.position().x.intValue();
-            position.y = this.position().y.intValue();
+            position.x = this.getPosition().x.intValue();
+            position.y = this.getPosition().y.intValue();
             position.y += range * this.directionWeight;
 
             if (!board.isInsideTable(position)) {
@@ -49,12 +48,12 @@ public class Pawn extends Piece {
                 break;
             }
 
-            this.moves().get(position.y).set(position.x, true);
+            this.getMoves().get(position.y).set(position.x, true);
         }
 
         for (int[] forkDirection : this.forkDirections) {
-            position.x = this.position().x.intValue();
-            position.y = this.position().y.intValue();
+            position.x = this.getPosition().x.intValue();
+            position.y = this.getPosition().y.intValue();
             position.x += forkDirection[0];
             position.y += forkDirection[1] * this.directionWeight;
 
@@ -65,13 +64,13 @@ public class Pawn extends Piece {
             IPiece target = board.findPiece(position);
 
             if (PieceHelper.isEnemy(this, target)) {
-                this.moves().get(position.y).set(position.x, true);
+                this.getMoves().get(position.y).set(position.x, true);
             }
         }
 
         for (int[] enPassantDirection : this.enPassantDirections) {
-            position.x = this.position().x.intValue();
-            position.y = this.position().y.intValue();
+            position.x = this.getPosition().x.intValue();
+            position.y = this.getPosition().y.intValue();
             position.x += enPassantDirection[0];
 
             if (!this.board.isInsideTable(position)) {
@@ -95,7 +94,7 @@ public class Pawn extends Piece {
             int backupY = position.y.intValue();
             position.y += this.directionWeight;
 
-            this.moves().get(position.y).set(position.x, true);
+            this.getMoves().get(position.y).set(position.x, true);
             position.y = backupY;
         }
 
@@ -119,6 +118,6 @@ public class Pawn extends Piece {
 
     @Override
     public String getIdentifier() {
-        return String.join(" ", PieceEnum.PAWN.toString(), this.color().toString());
+        return String.join(" ", PieceEnum.PAWN.toString(), this.getColor().toString());
     }
 }

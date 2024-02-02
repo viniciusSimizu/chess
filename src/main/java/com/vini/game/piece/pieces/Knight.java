@@ -1,10 +1,8 @@
 package com.vini.game.piece.pieces;
 
-import com.vini.game.board.Board;
-import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
+import com.vini.game.interfaces.IPiece;
 import com.vini.game.lib.Position;
-import com.vini.game.piece.IPiece;
 import com.vini.game.piece.Piece;
 import com.vini.game.piece.PieceHelper;
 
@@ -16,17 +14,13 @@ public class Knight extends Piece {
     private final int forwardStepWeight = 2;
     private final int sideStepWeight = 1;
 
-    public Knight(Board board, ColorEnum color) {
-        super(board, color);
-    }
-
     @Override
     public IPiece updateMoves() {
         Position position = new Position(null, null);
         for (int[] direction : this.directions) {
             for (int sideStepDirection : List.of(-1, 1)) {
-                position.x = this.position().x.intValue();
-                position.y = this.position().y.intValue();
+                position.x = this.getPosition().x.intValue();
+                position.y = this.getPosition().y.intValue();
 
                 position.x += this.forwardStepWeight * direction[0];
                 position.y += this.forwardStepWeight * direction[1];
@@ -44,7 +38,7 @@ public class Knight extends Piece {
                     break;
                 }
 
-                this.moves().get(position.y).set(position.x, true);
+                this.getMoves().get(position.y).set(position.x, true);
 
                 if (PieceHelper.isEnemy(this, target)) {
                     break;
@@ -57,6 +51,6 @@ public class Knight extends Piece {
 
     @Override
     public String getIdentifier() {
-        return String.join(" ", PieceEnum.KNIGHT.toString(), this.color().toString());
+        return String.join(" ", PieceEnum.KNIGHT.toString(), this.getColor().toString());
     }
 }

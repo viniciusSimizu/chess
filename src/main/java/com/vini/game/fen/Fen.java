@@ -4,7 +4,7 @@ import com.vini.game.board.Board;
 import com.vini.game.board.BoardBuilder;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
-import com.vini.game.piece.IPiece;
+import com.vini.game.interfaces.IPiece;
 import com.vini.game.translate.PieceEnumStringTranslate;
 
 import java.util.Iterator;
@@ -48,7 +48,7 @@ public class Fen {
         Iterator<IPiece> iterator = board.iteratorOverPiece();
         while (iterator.hasNext()) {
             IPiece piece = iterator.next();
-            piece.structureMoves();
+            piece.setBoard(board);
         }
 
         return board;

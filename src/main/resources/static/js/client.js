@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   socket.onmessage = (e) => {
-    console.log(e.data);
+    if (e.data === "RELOAD") {
+      htmx.trigger("#board", "reload");
+    }
   };
 });

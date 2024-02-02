@@ -2,28 +2,28 @@ package com.vini.game.piece;
 
 import com.vini.game.board.Board;
 import com.vini.game.enums.ColorEnum;
+import com.vini.game.interfaces.IPiece;
 import com.vini.game.lib.Position;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Piece implements IPiece {
+
     protected Board board;
-
     protected ColorEnum color;
-    protected final Position position;
     protected List<List<Boolean>> moves;
+    protected final Position position;
 
-    protected Piece(Board board, ColorEnum color) {
-        this.board = board;
-        this.color = color;
+    protected Piece() {
         this.position = new Position(null, null);
     }
 
     @Override
-    public IPiece structureMoves() {
-        this.moves = new ArrayList<>();
+    public void setBoard(Board board) {
+        this.board = board;
 
+        this.moves = new ArrayList<>();
         for (int i = 0; i < this.board.getHeight(); i++) {
             List<Boolean> row = new ArrayList<>();
             for (int j = 0; j < this.board.getWidth(); j++) {
@@ -31,8 +31,20 @@ public abstract class Piece implements IPiece {
             }
             this.moves.add(row);
         }
+    }
 
-        return this;
+    @Override
+    public void resetMoves() {
+        for (int i = 0; i < this.getMoves().size(); i++) {
+            for (int j = 0; j < this.getMoves().get(i).size(); j++) {
+                this.getMoves().get(i).set(j, false);
+            }
+        }
+    }
+
+    @Override
+    public void setColor(ColorEnum color) {
+        this.color = color;
     }
 
     @Override
@@ -41,54 +53,43 @@ public abstract class Piece implements IPiece {
             return false;
         }
 
-        this.board.tryMovePiece(to, this.position());
+        this.board.tryMovePiece(to, this.getPosition());
         this.board.tryMovePiece(this.position, null);
         this.position.x = to.x;
         this.position.y = to.y;
-
         this.resetMoves();
 
         return true;
     }
 
     @Override
-    public void resetMoves() {
-        for (int i = 0; i < this.moves().size(); i++) {
-            for (int j = 0; j < this.moves().get(i).size(); j++) {
-                this.moves().get(i).set(j, false);
-            }
-        }
-        ;
-    }
-
-    @Override
-    public ColorEnum color() {
+    public ColorEnum getColor() {
         return this.color;
     }
 
     @Override
-    public Position position() {
+    public Position getPosition() {
         return this.position;
+    }
+
+    @Override
+    public List<List<Boolean>> getMoves() {
+        return this.moves;
     }
 
     protected boolean canMove(Position position) {
         if (!this.isInsideMoves(position)) {
             return false;
         }
-        return this.moves().get(position.y).get(position.x);
-    }
-
-    @Override
-    public List<List<Boolean>> moves() {
-        return this.moves;
+        return this.getMoves().get(position.y).get(position.x);
     }
 
     protected boolean isInsideMoves(Position position) {
-        if (position.y < 0 || position.y >= this.moves().size()) {
+        if (position.y < 0 || position.y >= this.getMoves().size()) {
             return false;
         }
 
-        if (position.x >= 0 && position.x < this.moves().get(position.y).size()) {
+        if (position.x >= 0 && position.x < this.getMoves().get(position.y).size()) {
             return true;
         }
 

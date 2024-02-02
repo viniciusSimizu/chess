@@ -1,11 +1,18 @@
-<table id="game">
+<table
+		id="board"
+		hx-get="/board"
+		hx-trigger="reload"
+		hx-swap="outerHTML">
 	<tbody>
-		{{#table}}
+		{{#rows}}
 		<tr>
-			{{#row}}
+			{{#squares}}
 			<td class="piece {{identifiers}}"></td>
-			{{/row}}
+			{{/squares}}
+			{{^squares}}
+			<td class="square"></td>
+			{{/squares}}
 		</tr>
-		{{/table}}
+		{{/rows}}
 	</tbody>
 </table>
