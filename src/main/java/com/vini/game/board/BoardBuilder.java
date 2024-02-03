@@ -3,6 +3,7 @@ package com.vini.game.board;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
 import com.vini.game.interfaces.IPiece;
+import com.vini.game.lib.Position;
 import com.vini.game.piece.PieceFactory;
 
 import java.util.ArrayList;
@@ -18,6 +19,14 @@ public class BoardBuilder {
 
     public BoardBuilder() {
         this.reset();
+    }
+
+    public BoardBuilder reset() {
+        this.board = new Board();
+        this.pieces = new ArrayList<>();
+        this.columnIdx = this.rowIdx = 0;
+        this.width = null;
+        return this;
     }
 
     public BoardBuilder buildRow() throws IllegalArgumentException {
@@ -73,8 +82,8 @@ public class BoardBuilder {
                 return this;
         }
 
-        buildingPiece.getPosition().x = this.rowIdx;
-        buildingPiece.getPosition().y = this.columnIdx;
+        var position = new Position(this.columnIdx, this.rowIdx);
+        buildingPiece.setPosition(position);
         this.pieces.add(buildingPiece);
         this.columnIdx++;
         return this;
@@ -89,14 +98,6 @@ public class BoardBuilder {
         Board board = this.board;
         this.reset();
         return board;
-    }
-
-    public BoardBuilder reset() {
-        this.board = new Board();
-        this.pieces = new ArrayList<>();
-        this.width = null;
-        this.columnIdx = this.rowIdx = 0;
-        return this;
     }
 
     private boolean canInsert() {

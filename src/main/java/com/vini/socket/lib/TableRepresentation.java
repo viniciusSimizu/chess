@@ -53,10 +53,7 @@ public class TableRepresentation {
             this.isPiece = true;
             this.classes = piece.getIdentifiers();
             var moveTable = piece.getMoves();
-            String identifier = piece.getIdentifiers();
-            if (identifier.contains("knight") && identifier.contains("black")) {
-                this.viewMoves(piece);
-            }
+
             for (int i = 0; i < moveTable.size(); i++) {
                 if (!moveTable.get(i)) {
                     continue;
@@ -67,27 +64,6 @@ public class TableRepresentation {
                 var movePosition = new Position(x, y);
                 this.moves.add(new Move(piece, movePosition));
             }
-        }
-
-        private void viewMoves(IPiece piece) {
-            var message = new StringBuilder();
-            var position = piece.getPosition();
-            var identifier = piece.getIdentifiers();
-            message.append(
-                    "piece: %s | x: %d | y: %d\n".formatted(identifier, position.x, position.y));
-            message.append("CAN MOVE TO:\n");
-
-            var moves = piece.getMoves();
-            for (int i = 0; i < moves.size(); i++) {
-                if (!moves.get(i)) {
-                    continue;
-                }
-
-                var x = i % board.getWidth();
-                var y = Math.floorDiv(i, board.getWidth());
-                message.append("x: %d | y: %d\n".formatted(x, y));
-            }
-            System.out.println(message);
         }
     }
 

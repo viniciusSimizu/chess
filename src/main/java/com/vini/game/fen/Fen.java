@@ -33,13 +33,13 @@ public class Fen {
                 continue;
             }
 
-            PieceEnum piece = PieceEnumStringTranslate.stringToPiece(Character.toString(chr));
+            PieceEnum pieceTag = PieceEnumStringTranslate.stringToPiece(Character.toString(chr));
 
-            if (piece == null) {
+            if (pieceTag == null) {
                 throw new IllegalArgumentException("Invalid data: %s".formatted(chr));
             }
 
-            builder.buildPiece(piece, Fen.notationColor(chr));
+            builder.buildPiece(pieceTag, Fen.notationColor(chr));
         }
         builder.buildRow();
 

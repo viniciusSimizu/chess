@@ -25,7 +25,7 @@ body {
     tr:nth-child(odd) td:nth-child(odd),
     tr:nth-child(even) td:nth-child(even)
   ) {
-  background-color: #ffe;
+  background-color: #b7b7af;
 }
 
 #board
@@ -33,7 +33,7 @@ body {
     tr:nth-child(odd) td:nth-child(even),
     tr:nth-child(even) td:nth-child(odd)
   ) {
-  background-color: #191;
+  background-color: #251c1c;
 }
 
 .piece {
@@ -53,21 +53,24 @@ body {
   height: 100%;
   user-select: none;
   visibility: hidden;
-  transform: translate(--offsetX, --offsetY);
+  transform: translate(
+    calc(100% * var(--offsetX)),
+    calc(100% * var(--offsetY))
+  );
 }
 
 .move::after {
   content: "";
-  width: 10%;
-  height: 10%;
+  width: 30%;
+  height: 30%;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: orange;
+  background-color: #fdf9f9;
   border-radius: 9999px;
 }
 
-.move.active {
+.piece.active .move {
   visibility: visible;
 }
