@@ -33,7 +33,7 @@ public class BoardIteratorOverPiece implements Iterator<IPiece> {
             return null;
         }
 
-        IPiece piece = null;
+        IPiece piece;
         while (this.currIndex < this.pieces.size()) {
 
             piece = this.pieces.get(this.currIndex);

@@ -63,14 +63,43 @@ public abstract class Piece implements IPiece {
     }
 
     @Override
+    public void setPosition(Position position) {
+        this.position.x = position.x;
+        this.position.y = position.y;
+    }
+
+    @Override
     public List<Boolean> getMoves() {
         return this.moves;
+    }
+
+    @Override
+    public String getIdentifiers() {
+        String type = this.getType().toString();
+        String color = this.getColor().toString();
+        return String.join(" ", type, color);
     }
 
     protected boolean canMove(Position position) {
         if (!this.board.isInsideTable(position)) {
             return false;
         }
-        return this.moves.get(this.board.getPositionIndex(position));
+        return this.moves.get(this.board.calcPositionIndex(position));
+    }
+
+    protected boolean isAlly(IPiece target) {
+        if (target == null) {
+            return false;
+        }
+
+        return this.color == target.getColor();
+    }
+
+    protected boolean isEnemy(IPiece target) {
+        if (target == null) {
+            return false;
+        }
+
+        return this.color != target.getColor();
     }
 }

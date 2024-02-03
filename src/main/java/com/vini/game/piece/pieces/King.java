@@ -4,7 +4,6 @@ import com.vini.game.enums.PieceEnum;
 import com.vini.game.interfaces.IPiece;
 import com.vini.game.lib.Position;
 import com.vini.game.piece.Piece;
-import com.vini.game.piece.PieceHelper;
 
 public class King extends Piece {
 
@@ -16,23 +15,23 @@ public class King extends Piece {
 
     @Override
     public IPiece updateMoves() {
-        Position position = new Position(null, null);
+        Position localPosition = new Position(null, null);
         for (int[] direction : this.directions) {
-            position.x = this.getPosition().x.intValue() + direction[0];
-            position.y = this.getPosition().y.intValue() + direction[1];
+            localPosition.x = this.position.x + direction[0];
+            localPosition.y = this.position.y + direction[1];
 
-            if (!board.isInsideTable(position)) {
+            if (!board.isInsideTable(localPosition)) {
                 continue;
             }
             ;
 
-            IPiece target = board.findPiece(position);
+            IPiece target = board.findPiece(localPosition);
 
-            if (PieceHelper.isAlly(this, target)) {
+            if (this.isAlly(target)) {
                 continue;
             }
 
-            this.moves.set(this.board.getPositionIndex(position), true);
+            this.moves.set(this.board.calcPositionIndex(localPosition), true);
         }
 
         return this;
@@ -43,7 +42,7 @@ public class King extends Piece {
     }
 
     @Override
-    public String getIdentifier() {
-        return String.join(" ", PieceEnum.KING.toString(), this.getColor().toString());
+    public PieceEnum getType() {
+        return PieceEnum.KING;
     }
 }

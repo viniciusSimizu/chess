@@ -5,7 +5,6 @@ import com.vini.game.enums.PieceEnum;
 import com.vini.game.interfaces.IPiece;
 import com.vini.game.lib.Position;
 import com.vini.game.piece.Piece;
-import com.vini.game.piece.PieceHelper;
 
 public class Pawn extends Piece {
 
@@ -13,7 +12,7 @@ public class Pawn extends Piece {
     private final int[][] enPassantDirections = {{-1, 0}, {1, 0}};
     private int directionWeight = 0;
 
-    private Integer movedTwoRound = -1;
+    private int movedTwoRound = -1;
     private boolean isFirstMoveFlag = true;
 
     @Override
@@ -29,57 +28,57 @@ public class Pawn extends Piece {
     @Override
     public IPiece updateMoves() {
         this.resetMoves();
-        Position position = new Position(null, null);
+        Position localPosition = new Position(null, null);
         int maxDistance = this.isFirstMoveFlag ? 2 : 1;
 
         for (int range = 1; range <= maxDistance; range++) {
-            position.x = this.getPosition().x.intValue();
-            position.y = this.getPosition().y.intValue();
-            position.y += range * this.directionWeight;
+            localPosition.x = this.position.x;
+            localPosition.y = this.position.y;
+            localPosition.y += range * this.directionWeight;
 
-            if (!board.isInsideTable(position)) {
+            if (!board.isInsideTable(localPosition)) {
                 break;
             }
             ;
 
-            IPiece target = board.findPiece(position);
+            IPiece target = board.findPiece(localPosition);
 
             if (target != null) {
                 break;
             }
 
-            this.moves.set(this.board.getPositionIndex(position), true);
+            this.moves.set(this.board.calcPositionIndex(localPosition), true);
         }
 
         for (int[] forkDirection : this.forkDirections) {
-            position.x = this.getPosition().x.intValue();
-            position.y = this.getPosition().y.intValue();
-            position.x += forkDirection[0];
-            position.y += forkDirection[1] * this.directionWeight;
+            localPosition.x = this.position.x;
+            localPosition.y = this.position.y;
+            localPosition.x += forkDirection[0];
+            localPosition.y += forkDirection[1] * this.directionWeight;
 
-            if (!this.board.isInsideTable(position)) {
+            if (!this.board.isInsideTable(localPosition)) {
                 continue;
             }
 
-            IPiece target = board.findPiece(position);
+            IPiece target = board.findPiece(localPosition);
 
-            if (PieceHelper.isEnemy(this, target)) {
-                this.moves.set(this.board.getPositionIndex(position), true);
+            if (this.isEnemy(target)) {
+                this.moves.set(this.board.calcPositionIndex(localPosition), true);
             }
         }
 
         for (int[] enPassantDirection : this.enPassantDirections) {
-            position.x = this.getPosition().x.intValue();
-            position.y = this.getPosition().y.intValue();
-            position.x += enPassantDirection[0];
+            localPosition.x = this.position.x;
+            localPosition.y = this.position.y;
+            localPosition.x += enPassantDirection[0];
 
-            if (!this.board.isInsideTable(position)) {
+            if (!this.board.isInsideTable(localPosition)) {
                 continue;
             }
 
-            IPiece target = board.findPiece(position);
+            IPiece target = board.findPiece(localPosition);
 
-            if (!PieceHelper.isEnemy(this, target) || !(target instanceof Pawn)) {
+            if (!this.isEnemy(target) || !(target instanceof Pawn)) {
                 continue;
             }
 
@@ -91,11 +90,11 @@ public class Pawn extends Piece {
                 continue;
             }
 
-            int backupY = position.y.intValue();
-            position.y += this.directionWeight;
+            int backupY = localPosition.y;
+            localPosition.y += this.directionWeight;
 
-            this.moves.set(this.board.getPositionIndex(position), true);
-            position.y = backupY;
+            this.moves.set(this.board.calcPositionIndex(localPosition), true);
+            localPosition.y = backupY;
         }
 
         return this;
@@ -117,7 +116,15 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public String getIdentifier() {
-        return String.join(" ", PieceEnum.PAWN.toString(), this.getColor().toString());
+    public PieceEnum getType() {
+        return PieceEnum.PAWN;
+    }
+
+    public void setMovedTwoRound(int movedTwoRound) {
+        this.movedTwoRound = movedTwoRound;
+    }
+
+    public void setIsFirstMoveFlag(boolean isFirstMoveFlag) {
+        this.isFirstMoveFlag = isFirstMoveFlag;
     }
 }

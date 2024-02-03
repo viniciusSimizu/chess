@@ -3,6 +3,7 @@ package com.vini;
 import com.sun.net.httpserver.HttpServer;
 import com.vini.shared.Env;
 import com.vini.socket.SocketServer;
+import com.vini.socket.models.GameModel;
 import com.vini.web.WebServer;
 import com.vini.web.routes.Routes;
 
@@ -19,8 +20,10 @@ public class App {
 
         try {
             startWeb();
-            startSocket();
+            var game = GameModel.INSTANCE;
+            // startSocket();
         } catch (IOException e) {
+            System.out.println("Server error");
             System.exit(0);
         }
     }

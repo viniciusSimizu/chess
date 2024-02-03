@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const host = window.location.hostname;
+  /* const host = window.location.hostname;
   const path = "connections";
   const socket = new WebSocket(`ws://${host}:3000/${path}`);
 
@@ -17,5 +17,5 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.data === "RELOAD") {
       htmx.trigger("#board", "reload");
     }
-  };
+  }; */
 });

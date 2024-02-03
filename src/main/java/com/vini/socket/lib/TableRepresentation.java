@@ -9,47 +9,94 @@ import java.util.List;
 
 public class TableRepresentation {
 
+    private Board board;
     public List<Row> rows;
 
     public TableRepresentation(Board board) {
-        var position = new Position(null, null);
         this.rows = new ArrayList<>(board.getHeight());
+        this.board = board;
 
-        for (int y = 0; y < board.getHeight(); y++) {
-            var row = new ArrayList<IPiece>(board.getWidth());
+        for (int row = 0; row < board.getHeight(); row++) {
+            var position = new Position(null, row);
+            this.rows.add(new Row(position));
+        }
+    }
 
-            for (int x = 0; x < board.getWidth(); x++) {
-                position.y = y;
-                position.x = x;
-                row.add(board.findPiece(position));
+    class Row {
+
+        public List<Square> squares;
+
+        public Row(Position position) {
+            this.squares = new ArrayList<>(board.getWidth());
+
+            for (int column = 0; column < board.getWidth(); column++) {
+                position.x = column;
+                this.squares.add(new Square(position));
             }
-            this.rows.add(new Row(row));
         }
     }
-}
 
-class Row {
+    class Square {
 
-    public List<Square> squares;
+        public boolean isPiece;
+        public String classes;
+        public List<Move> moves = new ArrayList<>();
 
-    public Row(List<IPiece> row) {
-        this.squares = row.stream().map(Square::new).toList();
-    }
-}
+        public Square(Position position) {
+            IPiece piece = board.findPiece(position);
 
-class Square {
+            if (piece == null) {
+                this.isPiece = false;
+                return;
+            }
 
-    public boolean isPiece;
-    public String classes;
+            this.isPiece = true;
+            this.classes = piece.getIdentifiers();
+            var moveTable = piece.getMoves();
+            String identifier = piece.getIdentifiers();
+            if (identifier.contains("knight") && identifier.contains("black")) {
+                this.viewMoves(piece);
+            }
+            for (int i = 0; i < moveTable.size(); i++) {
+                if (!moveTable.get(i)) {
+                    continue;
+                }
 
-    public Square(IPiece piece) {
-        if (piece == null) {
-            this.isPiece = false;
-            this.classes = null;
-            return;
+                int x = i % board.getWidth();
+                int y = Math.floorDiv(i, board.getWidth());
+                var movePosition = new Position(x, y);
+                this.moves.add(new Move(piece, movePosition));
+            }
         }
 
-        this.isPiece = true;
-        this.classes = piece.getIdentifier();
+        private void viewMoves(IPiece piece) {
+            var message = new StringBuilder();
+            var position = piece.getPosition();
+            var identifier = piece.getIdentifiers();
+            message.append(
+                    "piece: %s | x: %d | y: %d\n".formatted(identifier, position.x, position.y));
+            message.append("CAN MOVE TO:\n");
+
+            var moves = piece.getMoves();
+            for (int i = 0; i < moves.size(); i++) {
+                if (!moves.get(i)) {
+                    continue;
+                }
+
+                var x = i % board.getWidth();
+                var y = Math.floorDiv(i, board.getWidth());
+                message.append("x: %d | y: %d\n".formatted(x, y));
+            }
+            System.out.println(message);
+        }
+    }
+
+    class Move {
+        public int offsetX, offsetY;
+
+        public Move(IPiece piece, Position movePosition) {
+            this.offsetX = movePosition.x - piece.getPosition().x;
+            this.offsetY = movePosition.y - piece.getPosition().y;
+        }
     }
 }

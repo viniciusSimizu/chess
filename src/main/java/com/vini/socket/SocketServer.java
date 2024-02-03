@@ -49,7 +49,9 @@ public class SocketServer extends WebSocketServer {
     @Override
     public void onError(WebSocket connection, Exception exception) {
         System.out.println("onError");
-        connection.close(1013);
+        if (connection != null) {
+            connection.close(1013);
+        }
     }
 
     private Runnable shutdown() {

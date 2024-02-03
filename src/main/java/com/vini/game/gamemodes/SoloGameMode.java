@@ -16,6 +16,10 @@ public class SoloGameMode implements IGameMode {
     private Board board = Fen.build(Fen.defaultNotation);
     private ColorEnum currColor = ColorEnum.WHITE;
 
+    public SoloGameMode() {
+        this.board.updatePieceMovements();
+    }
+
     @Override
     public void move(Position from, Position to) {
         IPiece piece = this.board.findPiece(from);

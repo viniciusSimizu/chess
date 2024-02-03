@@ -15,7 +15,7 @@ public class Board {
 
     public IPiece findPiece(Position position) {
         if (this.isInsideTable(position)) {
-            return this.pieces.get(this.width * position.y + position.x);
+            return this.pieces.get(this.calcPositionIndex(position));
         }
         return null;
     }
@@ -33,6 +33,13 @@ public class Board {
         return piece.tryMove(to);
     }
 
+    public void setSquarePiece(Position position, IPiece value) {
+        if (!this.isInsideTable(position)) {
+            return;
+        }
+        this.pieces.set(this.calcPositionIndex(position), value);
+    }
+
     public Integer getHeight() {
         return this.height;
     }
@@ -41,8 +48,8 @@ public class Board {
         return this.width;
     }
 
-    public int getPositionIndex(Position position) {
-        return position.y * this.getWidth() + position.x;
+    public int calcPositionIndex(Position position) {
+        return position.y * this.width + position.x;
     }
 
     public boolean isInsideTable(Position position) {
@@ -50,11 +57,15 @@ public class Board {
             return false;
         }
 
-        if (position.x < this.width && position.y < this.height) {
-            return true;
+        if (position.x < 0 || position.x >= this.width) {
+            return false;
         }
 
-        return false;
+        if (position.y < 0 || position.y >= this.height) {
+            return false;
+        }
+
+        return true;
     }
 
     public void updatePieceMovements() {

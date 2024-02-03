@@ -4,7 +4,6 @@ import com.vini.game.enums.PieceEnum;
 import com.vini.game.interfaces.IPiece;
 import com.vini.game.lib.Position;
 import com.vini.game.piece.Piece;
-import com.vini.game.piece.PieceHelper;
 
 public class Rook extends Piece {
 
@@ -13,28 +12,28 @@ public class Rook extends Piece {
 
     @Override
     public IPiece updateMoves() {
-        Position position = new Position(null, null);
+        Position localPosition = new Position(null, null);
         for (int[] direction : this.directions) {
-            position.x = this.getPosition().x.intValue();
-            position.y = this.getPosition().y.intValue();
+            localPosition.x = this.position.x;
+            localPosition.y = this.position.y;
 
             while (true) {
-                position.x += direction[0];
-                position.y += direction[1];
+                localPosition.x += direction[0];
+                localPosition.y += direction[1];
 
-                if (!board.isInsideTable(position)) {
+                if (!board.isInsideTable(localPosition)) {
                     break;
                 }
 
-                IPiece target = board.findPiece(position);
+                IPiece target = board.findPiece(localPosition);
 
-                if (PieceHelper.isAlly(this, target)) {
+                if (this.isAlly(target)) {
                     break;
                 }
 
-                this.moves.set(this.board.getPositionIndex(position), true);
+                this.moves.set(this.board.calcPositionIndex(localPosition), true);
 
-                if (PieceHelper.isEnemy(this, target)) {
+                if (this.isEnemy(target)) {
                     break;
                 }
             }
@@ -43,12 +42,12 @@ public class Rook extends Piece {
         return this;
     }
 
-    public boolean isFirstMove() {
-        return this.isFirstMove;
+    @Override
+    public PieceEnum getType() {
+        return PieceEnum.ROOK;
     }
 
-    @Override
-    public String getIdentifier() {
-        return String.join(" ", PieceEnum.ROOK.toString(), this.getColor().toString());
+    public boolean isFirstMove() {
+        return this.isFirstMove;
     }
 }
