@@ -1,47 +1,91 @@
+const host = window.location.hostname;
+const resourcePath = "connections";
+
+const messageType = {
+  CONNECTION: "CONNECTION",
+  RELOAD: "RELOAD",
+};
+
+const movement = {
+  from: { x: null, y: null },
+  to: { x: null, y: null },
+};
+let selectedPiece;
+let pieces = [];
+let moves = [];
+
 document.addEventListener("DOMContentLoaded", () => {
-  /* const host = window.location.hostname;
-  const path = "connections";
-  const socket = new WebSocket(`ws://${host}:3000/${path}`);
-
-  const movement = {
-    from: { x: null, y: null },
-    to: { x: null, y: null },
-  };
-
+  const socket = new WebSocket(`ws://${host}:3000/${resourcePath}`);
   socket.onopen = () => {
     console.log("connected");
-    htmx.trigger("#mainContent", "connected");
   };
 
   socket.onmessage = (e) => {
-    if (e.data === "RELOAD") {
-      htmx.trigger("#board", "reload");
-    }
-  }; */
-});
+    const { type, body } = JSON.parse(e.data);
 
-htmx.onLoad(() => {
-  const pieces = document.querySelectorAll(".piece");
-  let selectedPiece;
-  let moves = [];
+    if (type === messageType.CONNECTION) {
+      document.querySelector("#mainContent").outerHTML = body;
+      load();
+    }
+
+    if (type === messageType.RELOAD) {
+      document.querySelector("#board").outerHTML = body;
+      removeMoves();
+      load();
+    }
+  };
+
+  window.addEventListener("click", (e) => {
+    if (
+      e.target.classList.contains("piece") ||
+      e.target.classList.contains("move")
+    ) {
+      return;
+    }
+    removeMoves();
+    unselectPiece();
+  });
+
+  function load() {
+    removeMoves();
+    unselectPiece();
+
+    pieces = document.querySelectorAll(".piece");
+    pieces.forEach((piece) => {
+      piece.addEventListener("click", selectHandle);
+    });
+  }
+
+  // =====================================================================
 
   function selectHandle(e) {
-    console.log("selecionou");
+    if (!e.target.classList.contains("piece")) {
+      return;
+    }
 
-    const alreadySelected = this.classList.contains("active");
+    const alreadySelected = e.target.classList.contains("active");
     unselectPiece();
 
     if (alreadySelected) {
       return;
     }
 
-    selectPiece(this);
+    selectPiece(e.target);
     removeMoves();
-    addMoves(this.querySelectorAll(".move"));
+    addMoves(e.target.querySelectorAll(".move"));
   }
 
   function moveHandle(e) {
-    console.log("moveu");
+    const computedStyle = getComputedStyle(e.target);
+    const offsetX = parseInt(computedStyle.getPropertyValue("--offsetX"));
+    const offsetY = parseInt(computedStyle.getPropertyValue("--offsetY"));
+    movement.to.x = movement.from.x + offsetX;
+    movement.to.y = movement.from.y + offsetY;
+
+    removeMoves();
+    unselectPiece();
+
+    requestMove();
   }
 
   function addMoves(moveElements) {
@@ -57,6 +101,8 @@ htmx.onLoad(() => {
   function selectPiece(piece) {
     selectedPiece = piece;
     selectedPiece.classList.add("active");
+    movement.from.x = piece.cellIndex;
+    movement.from.y = piece.parentElement.sectionRowIndex;
   }
 
   function unselectPiece() {
@@ -66,21 +112,18 @@ htmx.onLoad(() => {
     }
   }
 
-  // =====================================================================
-
-  pieces.forEach((piece) => {
-    piece.addEventListener("click", selectHandle);
-  });
-
-  window.addEventListener("click", (e) => {
-    const target = e.target;
-    if (
-      target.classList.contains("piece") ||
-      target.classList.contains("move")
-    ) {
+  function requestMove() {
+    if (!socket.OPEN) {
       return;
     }
-    unselectPiece();
-    removeMoves();
-  });
+
+    socket.send(JSON.stringify(movement));
+  }
+
+  function resetMovement() {
+    movement.from.x = null;
+    movement.from.y = null;
+    movement.to.x = null;
+    movement.to.y = null;
+  }
 });

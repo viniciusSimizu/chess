@@ -21,24 +21,25 @@ public class SoloGameMode implements IGameMode {
     }
 
     @Override
-    public void move(Position from, Position to) {
+    public boolean tryMove(Position from, Position to) {
         IPiece piece = this.board.findPiece(from);
         if (piece == null) {
-            return;
+            return false;
         }
 
         if (piece.getColor() != this.currColor) {
-            return;
+            return false;
         }
 
-        boolean hasMoved = this.board.tryMovePiece(from, to);
+        boolean hasMoved = piece.tryMove(to);
         if (!hasMoved) {
-            return;
+            return false;
         }
 
         this.board.newRound();
         this.toggleColor();
         this.board.updatePieceMovements();
+        return true;
     }
 
     public void toggleColor() {
@@ -50,5 +51,10 @@ public class SoloGameMode implements IGameMode {
     @Override
     public Board getBoard() {
         return this.board;
+    }
+
+    @Override
+    public ColorEnum getCurrColor() {
+        return this.currColor;
     }
 }

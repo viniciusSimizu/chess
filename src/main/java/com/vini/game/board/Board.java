@@ -20,19 +20,6 @@ public class Board {
         return null;
     }
 
-    public boolean tryMovePiece(Position from, Position to) {
-        if (!this.isInsideTable(to)) {
-            return false;
-        }
-
-        IPiece piece = this.findPiece(from);
-        if (piece == null) {
-            return false;
-        }
-
-        return piece.tryMove(to);
-    }
-
     public void setSquarePiece(Position position, IPiece value) {
         if (!this.isInsideTable(position)) {
             return;

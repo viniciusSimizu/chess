@@ -94,6 +94,12 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
           <version>3.1.1</version>
           <configuration>
             <mainClass>com.vini.App</mainClass>
+            <arguments>
+              <argument>-Xmx256m</argument>
+              <argument>-Xms128m</argument>
+              <argument>-Xss512k</argument>
+              <argument>-XX:MaxCPUUsage=30</argument>
+            </arguments>
           </configuration>
         </plugin>
         <plugin>

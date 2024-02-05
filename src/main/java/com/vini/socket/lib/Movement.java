@@ -10,26 +10,16 @@ import java.util.Map;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Movement {
 
-    @JsonIgnore private Position from = new Position(null, null);
-    @JsonIgnore private Position to = new Position(null, null);
+    @JsonIgnore public Position from;
+    @JsonIgnore public Position to;
 
     @JsonProperty("from")
-    private void unpackNestedFrom(Map<String, String> from) {
-        this.from.x = Integer.parseInt(from.get("x"));
-        this.from.y = Integer.parseInt(from.get("y"));
+    private void unpackNestedFrom(Map<String, Integer> from) {
+        this.from = new Position(from.get("x"), from.get("y"));
     }
 
     @JsonProperty("to")
-    private void unpackNestedTo(Map<String, String> to) {
-        this.to.x = Integer.parseInt(to.get("x"));
-        this.to.y = Integer.parseInt(to.get("y"));
-    }
-
-    public Position getFrom() {
-        return this.from;
-    }
-
-    public Position getTo() {
-        return this.to;
+    private void unpackNestedTo(Map<String, Integer> to) {
+        this.to = new Position(to.get("x"), to.get("y"));
     }
 }

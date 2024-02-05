@@ -43,11 +43,10 @@ public abstract class Piece implements IPiece {
             return false;
         }
 
-        this.board.tryMovePiece(to, this.getPosition());
-        this.board.tryMovePiece(this.position, null);
+        this.board.setSquarePiece(to, this);
+        this.board.setSquarePiece(this.position, null);
         this.position.x = to.x;
         this.position.y = to.y;
-        this.resetMoves();
 
         return true;
     }

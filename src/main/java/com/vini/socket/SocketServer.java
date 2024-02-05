@@ -2,6 +2,8 @@ package com.vini.socket;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vini.socket.enums.MessageType;
+import com.vini.socket.handlers.RenderBoardHandler;
 import com.vini.socket.lib.Movement;
 import com.vini.socket.models.GameModel;
 
@@ -9,6 +11,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 
 public class SocketServer extends WebSocketServer {
@@ -25,18 +28,42 @@ public class SocketServer extends WebSocketServer {
 
     @Override
     public void onOpen(WebSocket connection, ClientHandshake handshake) {
-        System.out.println("onOpen");
+        try {
+            var type = MessageType.CONNECTION;
+            var game = GameModel.INSTANCE;
+
+            String boardState = RenderBoardHandler.render(type, game);
+            connection.send(boardState);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            connection.close(3001);
+        }
     }
 
     @Override
     public void onMessage(WebSocket connection, String message) {
-        try {
-            ObjectMapper objMapper = new ObjectMapper();
-            Movement movement = objMapper.readValue(message, Movement.class);
-            GameModel.INSTANCE.move(movement.getFrom(), movement.getTo());
+        var objMapper = new ObjectMapper();
+        Movement movement;
 
-            this.broadcast("RELOAD");
+        try {
+            movement = objMapper.readValue(message, Movement.class);
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        boolean hasMoved = GameModel.INSTANCE.tryMove(movement.from, movement.to);
+        if (!hasMoved) {
+            return;
+        }
+
+        try {
+            var type = MessageType.RELOAD;
+            var game = GameModel.INSTANCE;
+
+            this.broadcast(RenderBoardHandler.render(type, game));
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -49,14 +76,15 @@ public class SocketServer extends WebSocketServer {
     @Override
     public void onError(WebSocket connection, Exception exception) {
         System.out.println("onError");
+        System.out.println(exception.getMessage());
         if (connection != null) {
-            connection.close(1013);
+            connection.close(1001);
         }
     }
 
     private Runnable shutdown() {
         return () -> {
-            this.getConnections().forEach(socket -> socket.close(1013));
+            this.getConnections().forEach(socket -> socket.close(1001));
             while (this.getConnections().stream().anyMatch(c -> !c.isClosed())) {
                 try {
                     Thread.sleep(1000);

@@ -105,14 +105,16 @@ public class Pawn extends Piece {
         boolean tryingToMoveTwo = Math.abs(this.position.y - to.y) == 2;
         boolean successMove = super.tryMove(to);
 
-        if (successMove) {
-            this.isFirstMoveFlag = false;
-            if (tryingToMoveTwo) {
-                this.movedTwoRound = this.board.getRound();
-            }
+        if (!successMove) {
+            return false;
         }
 
-        return successMove;
+        this.isFirstMoveFlag = false;
+        if (tryingToMoveTwo) {
+            this.movedTwoRound = this.board.getRound();
+        }
+
+        return true;
     }
 
     @Override

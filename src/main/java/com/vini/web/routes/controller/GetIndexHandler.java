@@ -2,16 +2,16 @@ package com.vini.web.routes.controller;
 
 import com.github.mustachejava.Mustache;
 import com.sun.net.httpserver.HttpExchange;
-import com.vini.web.lib.MvcController;
+import com.vini.web.lib.DefaultController;
 
 import java.io.*;
 
-public class GetIndexHandler extends MvcController {
+public class GetIndexHandler extends DefaultController {
 
     private final Mustache template;
 
     public GetIndexHandler() {
-        this.template = this.mustacheFactory.compile("index.mustache");
+        this.template = this.getMustacheFactory().compile("index.mustache");
     }
 
     @Override
