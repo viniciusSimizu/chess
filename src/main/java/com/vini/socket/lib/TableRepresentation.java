@@ -9,24 +9,23 @@ import java.util.List;
 
 public class TableRepresentation {
 
-    private Board board;
-    public List<Row> rows;
+    private final Board board;
+    public final List<Row> rows;
 
     public TableRepresentation(Board board) {
         this.rows = new ArrayList<>(board.getHeight());
         this.board = board;
 
         for (int row = 0; row < board.getHeight(); row++) {
-            var position = new Position(null, row);
-            this.rows.add(new Row(position));
+            this.rows.add(new Row(row));
         }
     }
 
     class Row {
-
         public List<Square> squares;
 
-        public Row(Position position) {
+        public Row(int row) {
+            var position = new Position(null, row);
             this.squares = new ArrayList<>(board.getWidth());
 
             for (int column = 0; column < board.getWidth(); column++) {
@@ -38,30 +37,26 @@ public class TableRepresentation {
 
     class Square {
 
-        public boolean isPiece;
-        public String classes;
+        public String classes = "square";
         public List<Move> moves = new ArrayList<>();
 
         public Square(Position position) {
             IPiece piece = board.findPiece(position);
 
             if (piece == null) {
-                this.isPiece = false;
                 return;
             }
 
-            this.isPiece = true;
-            this.classes = piece.getIdentifiers();
+            this.classes = "piece";
+            this.classes += " " + piece.getIdentifiers();
             var moveTable = piece.getMoves();
 
             for (int i = 0; i < moveTable.size(); i++) {
                 if (!moveTable.get(i)) {
                     continue;
                 }
+                var movePosition = Position.fromIndex(i, board.getWidth());
 
-                int x = i % board.getWidth();
-                int y = Math.floorDiv(i, board.getWidth());
-                var movePosition = new Position(x, y);
                 this.moves.add(new Move(piece, movePosition));
             }
         }
@@ -69,10 +64,21 @@ public class TableRepresentation {
 
     class Move {
         public int offsetX, offsetY;
+        public String classes = "move";
 
         public Move(IPiece piece, Position movePosition) {
             this.offsetX = movePosition.x - piece.getPosition().x;
             this.offsetY = movePosition.y - piece.getPosition().y;
+
+            IPiece targetSquare = board.findPiece(movePosition);
+            if (targetSquare == null) {
+                return;
+            }
+            if (targetSquare.getColor() == piece.getColor()) {
+                return;
+            }
+
+            this.classes += " enemy";
         }
     }
 }

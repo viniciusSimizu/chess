@@ -9,7 +9,6 @@ import com.vini.game.piece.Piece;
 public class Pawn extends Piece {
 
     private final int[][] forkDirections = {{-1, 1}, {1, 1}};
-    private final int[][] enPassantDirections = {{-1, 0}, {1, 0}};
     private int directionWeight = 0;
 
     private int movedTwoRound = -1;
@@ -28,8 +27,8 @@ public class Pawn extends Piece {
     @Override
     public IPiece updateMoves() {
         this.resetMoves();
-        Position localPosition = new Position(null, null);
         int maxDistance = this.isFirstMoveFlag ? 2 : 1;
+        var localPosition = new Position(null, null);
 
         for (int range = 1; range <= maxDistance; range++) {
             localPosition.x = this.position.x;
@@ -39,15 +38,13 @@ public class Pawn extends Piece {
             if (!board.isInsideTable(localPosition)) {
                 break;
             }
-            ;
 
             IPiece target = board.findPiece(localPosition);
-
             if (target != null) {
                 break;
             }
 
-            this.moves.set(this.board.calcPositionIndex(localPosition), true);
+            this.moves.set(localPosition.getIndex(this.board.getWidth()), true);
         }
 
         for (int[] forkDirection : this.forkDirections) {
@@ -61,13 +58,12 @@ public class Pawn extends Piece {
             }
 
             IPiece target = board.findPiece(localPosition);
-
             if (this.isEnemy(target)) {
-                this.moves.set(this.board.calcPositionIndex(localPosition), true);
+                this.moves.set(localPosition.getIndex(this.board.getWidth()), true);
             }
         }
 
-        for (int[] enPassantDirection : this.enPassantDirections) {
+        for (int[] enPassantDirection : this.forkDirections) {
             localPosition.x = this.position.x;
             localPosition.y = this.position.y;
             localPosition.x += enPassantDirection[0];
@@ -77,23 +73,21 @@ public class Pawn extends Piece {
             }
 
             IPiece target = board.findPiece(localPosition);
-
             if (!this.isEnemy(target) || !(target instanceof Pawn)) {
                 continue;
             }
 
             Pawn pawnTarget = (Pawn) target;
-
             boolean hasMovedTwo = pawnTarget.movedTwoRound != -1;
             int roundSinceMovedTwo = this.board.getRound() - pawnTarget.movedTwoRound;
+
             if (!hasMovedTwo || roundSinceMovedTwo != 1) {
                 continue;
             }
 
             int backupY = localPosition.y;
-            localPosition.y += this.directionWeight;
-
-            this.moves.set(this.board.calcPositionIndex(localPosition), true);
+            localPosition.y += enPassantDirection[1] * this.directionWeight;
+            this.moves.set(localPosition.getIndex(this.board.getWidth()), true);
             localPosition.y = backupY;
         }
 

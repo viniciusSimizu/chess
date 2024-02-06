@@ -11,7 +11,8 @@ public class Bishop extends Piece {
 
     @Override
     public IPiece updateMoves() {
-        Position localPosition = new Position(null, null);
+        var localPosition = new Position(null, null);
+
         for (int[] direction : this.directions) {
             localPosition.x = this.position.x;
             localPosition.y = this.position.y;
@@ -31,7 +32,7 @@ public class Bishop extends Piece {
                     break;
                 }
 
-                this.moves.set(this.board.calcPositionIndex(localPosition), true);
+                this.moves.set(localPosition.getIndex(this.board.getWidth()), true);
 
                 if (this.isEnemy(target)) {
                     break;

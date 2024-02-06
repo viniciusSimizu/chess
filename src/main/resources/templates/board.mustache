@@ -3,18 +3,15 @@
 		{{#rows}}
 		<tr>
 			{{#squares}}
-				{{#isPiece}}
-					<td class="piece {{classes}}">
+				<td class="{{classes}}">
 					{{#moves}}
-						<div class="move" style="
-												--offsetX: {{offsetX}};
-												--offsetY: {{offsetY}};
-												"></div>
+						<div
+							class="{{classes}}"
+							style="
+								 --offsetX: {{offsetX}};
+								 --offsetY: {{offsetY}};
+						 "></div>
 					{{/moves}}
-				{{/isPiece}}
-				{{^isPiece}}
-					<td class="square">
-				{{/isPiece}}
 				</td>
 			{{/squares}}
 		</tr>

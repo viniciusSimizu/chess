@@ -3,6 +3,7 @@ package com.vini.pieces;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.vini.game.board.BoardBuilder;
+import com.vini.game.enums.ColorEnum;
 import com.vini.game.fen.Fen;
 import com.vini.game.lib.Position;
 import com.vini.game.piece.pieces.King;
@@ -16,8 +17,8 @@ import java.util.List;
 public class KingTest {
 
     private King king;
-    private Position position = new Position(null, null);
-    private BoardBuilder builder = new BoardBuilder();
+    private final Position position = new Position(null, null);
+    private final BoardBuilder builder = new BoardBuilder();
 
     @BeforeEach
     public void setup() {
@@ -46,10 +47,52 @@ public class KingTest {
         expected.addAll(List.of(false, true, true, true, false));
         expected.addAll(List.of(false, false, false, false, false));
 
-        assertEquals(actual.size(), expected.size());
+        assertEquals(expected, actual);
+    }
 
-        for (int i = 0; i < actual.size(); i++) {
-            assertEquals(actual.get(i), expected.get(i));
-        }
+    @Test
+    public void AllyBlockMovement_Test() {
+        var board = Fen.build("5/2pp1/1p1p1/1ppp1/5");
+        this.position.x = 2;
+        this.position.y = 2;
+        this.king.setColor(ColorEnum.BLACK);
+        this.king.setPosition(this.position);
+
+        board.setSquarePiece(position, this.king);
+        this.king.setBoard(board);
+        board.updatePieceMovements();
+
+        var actual = this.king.getMoves();
+        var expected = new ArrayList<Boolean>();
+        expected.addAll(List.of(false, false, false, false, false));
+        expected.addAll(List.of(false, true, false, false, false));
+        expected.addAll(List.of(false, false, false, false, false));
+        expected.addAll(List.of(false, false, false, false, false));
+        expected.addAll(List.of(false, false, false, false, false));
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void EnemyMovementCaptures_Test() {
+        var board = Fen.build("5/2pp1/1p1p1/1ppp1/5");
+        this.position.x = 2;
+        this.position.y = 2;
+        this.king.setColor(ColorEnum.WHITE);
+        this.king.setPosition(this.position);
+
+        board.setSquarePiece(position, this.king);
+        this.king.setBoard(board);
+        board.updatePieceMovements();
+
+        var actual = this.king.getMoves();
+        var expected = new ArrayList<Boolean>();
+        expected.addAll(List.of(false, false, false, false, false));
+        expected.addAll(List.of(false, true, true, true, false));
+        expected.addAll(List.of(false, true, false, true, false));
+        expected.addAll(List.of(false, true, true, true, false));
+        expected.addAll(List.of(false, false, false, false, false));
+
+        assertEquals(expected, actual);
     }
 }

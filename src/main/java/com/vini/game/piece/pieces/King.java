@@ -15,7 +15,8 @@ public class King extends Piece {
 
     @Override
     public IPiece updateMoves() {
-        Position localPosition = new Position(null, null);
+        var localPosition = new Position(null, null);
+
         for (int[] direction : this.directions) {
             localPosition.x = this.position.x + direction[0];
             localPosition.y = this.position.y + direction[1];
@@ -31,7 +32,7 @@ public class King extends Piece {
                 continue;
             }
 
-            this.moves.set(this.board.calcPositionIndex(localPosition), true);
+            this.moves.set(localPosition.getIndex(this.board.getWidth()), true);
         }
 
         return this;

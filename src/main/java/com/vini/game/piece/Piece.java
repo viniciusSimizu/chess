@@ -83,7 +83,7 @@ public abstract class Piece implements IPiece {
         if (!this.board.isInsideTable(position)) {
             return false;
         }
-        return this.moves.get(this.board.calcPositionIndex(position));
+        return this.moves.get(position.getIndex(this.board.getWidth()));
     }
 
     protected boolean isAlly(IPiece target) {

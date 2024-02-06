@@ -3,6 +3,7 @@ package com.vini.pieces;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.vini.game.board.BoardBuilder;
+import com.vini.game.enums.ColorEnum;
 import com.vini.game.fen.Fen;
 import com.vini.game.lib.Position;
 import com.vini.game.piece.pieces.Queen;
@@ -16,8 +17,8 @@ import java.util.List;
 public class QueenTest {
 
     private Queen queen;
-    private Position position = new Position(null, null);
-    private BoardBuilder builder = new BoardBuilder();
+    private final Position position = new Position(null, null);
+    private final BoardBuilder builder = new BoardBuilder();
 
     @BeforeEach
     public void setup() {
@@ -46,10 +47,48 @@ public class QueenTest {
         expected.addAll(List.of(false, true, true, true, false));
         expected.addAll(List.of(true, false, true, false, true));
 
-        assertEquals(actual.size(), expected.size());
+        assertEquals(expected, actual);
+    }
 
-        for (int i = 0; i < actual.size(); i++) {
-            assertEquals(actual.get(i), expected.get(i));
-        }
+    @Test
+    public void AllyBlockMovement_Test() {
+        var board = Fen.build("1p1/3/2p");
+        this.position.x = 0;
+        this.position.y = 0;
+        this.queen.setColor(ColorEnum.BLACK);
+        this.queen.setPosition(this.position);
+
+        board.setSquarePiece(position, this.queen);
+        this.queen.setBoard(board);
+        board.updatePieceMovements();
+
+        var actual = this.queen.getMoves();
+        var expected = new ArrayList<Boolean>();
+        expected.addAll(List.of(false, false, false));
+        expected.addAll(List.of(true, true, false));
+        expected.addAll(List.of(true, false, false));
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void EnemyMovementCaptures_Test() {
+        var board = Fen.build("1p1/3/2p");
+        this.position.x = 0;
+        this.position.y = 0;
+        this.queen.setColor(ColorEnum.WHITE);
+        this.queen.setPosition(this.position);
+
+        board.setSquarePiece(position, this.queen);
+        this.queen.setBoard(board);
+        board.updatePieceMovements();
+
+        var actual = this.queen.getMoves();
+        var expected = new ArrayList<Boolean>();
+        expected.addAll(List.of(false, true, false));
+        expected.addAll(List.of(true, true, false));
+        expected.addAll(List.of(true, false, true));
+
+        assertEquals(expected, actual);
     }
 }

@@ -85,14 +85,17 @@ public class SocketServer extends WebSocketServer {
     private Runnable shutdown() {
         return () -> {
             this.getConnections().forEach(socket -> socket.close(1001));
-            while (this.getConnections().stream().anyMatch(c -> !c.isClosed())) {
+
+            var allClosed = false;
+            do {
+                allClosed = !this.getConnections().stream().anyMatch(c -> !c.isClosed());
+
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-            }
+            } while (!allClosed);
         };
     }
 }

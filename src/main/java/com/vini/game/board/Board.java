@@ -15,7 +15,7 @@ public class Board {
 
     public IPiece findPiece(Position position) {
         if (this.isInsideTable(position)) {
-            return this.pieces.get(this.calcPositionIndex(position));
+            return this.pieces.get(position.getIndex(this.width));
         }
         return null;
     }
@@ -24,7 +24,7 @@ public class Board {
         if (!this.isInsideTable(position)) {
             return;
         }
-        this.pieces.set(this.calcPositionIndex(position), value);
+        this.pieces.set(position.getIndex(this.width), value);
     }
 
     public Integer getHeight() {
@@ -33,10 +33,6 @@ public class Board {
 
     public Integer getWidth() {
         return this.width;
-    }
-
-    public int calcPositionIndex(Position position) {
-        return position.y * this.width + position.x;
     }
 
     public boolean isInsideTable(Position position) {

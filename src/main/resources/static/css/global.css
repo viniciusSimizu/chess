@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 html,
 body {
   height: 100%;
@@ -44,7 +48,7 @@ body {
 }
 
 .piece.active {
-	background-color: #b53d3d;
+  background-color: #b53d3d;
 }
 
 .move {
@@ -75,6 +79,15 @@ body {
   border-radius: 9999px;
 }
 
+.move.enemy::after {
+  width: 100%;
+  height: 100%;
+  border: 10px solid #f4f4f4bf;
+  background-color: transparent;
+  box-sizing: border-box;
+}
+
 .piece.active .move {
   visibility: visible;
+  z-index: 1;
 }

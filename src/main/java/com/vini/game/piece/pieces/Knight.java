@@ -37,7 +37,7 @@ public class Knight extends Piece {
                     continue;
                 }
 
-                this.moves.set(this.board.calcPositionIndex(localPosition), true);
+                this.moves.set(localPosition.getIndex(this.board.getWidth()), true);
             }
         }
 
