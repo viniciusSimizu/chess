@@ -1,18 +1,19 @@
-package com.vini.socket.lib;
+package com.vini.socket.structs;
 
-import com.vini.game.board.Board;
+import com.vini.game.interfaces.IBoard;
 import com.vini.game.interfaces.IPiece;
-import com.vini.game.lib.Position;
+import com.vini.game.structs.Position;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TableRepresentation {
 
-    private final Board board;
     public final List<Row> rows;
 
-    public TableRepresentation(Board board) {
+    private final IBoard board;
+
+    public TableRepresentation(IBoard board) {
         this.rows = new ArrayList<>(board.getHeight());
         this.board = board;
 
@@ -48,8 +49,8 @@ public class TableRepresentation {
             }
 
             this.classes = "piece";
-            this.classes += " " + piece.getIdentifiers();
-            var moveTable = piece.getMoves();
+            this.classes = String.join(" ", this.classes, piece.exportIdentifier());
+            var moveTable = piece.exportMoves();
 
             for (int i = 0; i < moveTable.size(); i++) {
                 if (!moveTable.get(i)) {

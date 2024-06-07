@@ -2,9 +2,10 @@ package com.vini.game.board;
 
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
+import com.vini.game.interfaces.IBoard;
 import com.vini.game.interfaces.IPiece;
-import com.vini.game.lib.Position;
 import com.vini.game.piece.PieceFactory;
+import com.vini.game.structs.Position;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class BoardBuilder {
 
     private Integer width;
     private int columnIdx, rowIdx;
-    private Board board;
+    private IBoard board;
     private List<IPiece> pieces;
     private PieceFactory factory = PieceFactory.getInstance();
 
@@ -89,13 +90,13 @@ public class BoardBuilder {
         return this;
     }
 
-    public Board getResult() throws IllegalArgumentException {
+    public IBoard getResult() throws IllegalArgumentException {
         if (this.columnIdx != 0 && this.canInsert()) {
             throw new IllegalArgumentException("Unbalanced board");
         }
         this.board.setPieces(this.pieces, this.rowIdx, this.width);
 
-        Board board = this.board;
+        IBoard board = this.board;
         this.reset();
         return board;
     }

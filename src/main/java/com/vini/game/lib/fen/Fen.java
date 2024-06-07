@@ -1,22 +1,19 @@
 package com.vini.game.fen;
 
-import com.vini.game.board.Board;
 import com.vini.game.board.BoardBuilder;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
+import com.vini.game.interfaces.IBoard;
 import com.vini.game.interfaces.IPiece;
 import com.vini.game.translate.PieceEnumStringTranslate;
-
-import java.util.Iterator;
 
 public class Fen {
 
     private Fen() {}
-    ;
 
     public static final String defaultNotation = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 
-    public static Board build(String fenNotation) throws IllegalArgumentException {
+    public static IBoard build(String fenNotation) throws IllegalArgumentException {
 
         BoardBuilder builder = new BoardBuilder();
 
@@ -43,9 +40,9 @@ public class Fen {
         }
         builder.buildRow();
 
-        Board board = builder.getResult();
+        IBoard board = builder.getResult();
 
-        Iterator<IPiece> iterator = board.iteratorOverPiece();
+        var iterator = board.iteratorOverPiece();
         while (iterator.hasNext()) {
             IPiece piece = iterator.next();
             piece.setBoard(board);

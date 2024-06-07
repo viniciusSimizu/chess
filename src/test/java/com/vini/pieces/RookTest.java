@@ -35,11 +35,11 @@ public class RookTest {
         this.position.y = 2;
         this.rook.setPosition(this.position);
 
-        board.setSquarePiece(position, this.rook);
+        board.setSquareValue(position, this.rook);
         this.rook.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.rook.getMoves();
+        var actual = this.rook.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false, false, true, false, false));
         expected.addAll(List.of(false, false, true, false, false));
@@ -58,11 +58,11 @@ public class RookTest {
         this.rook.setColor(ColorEnum.BLACK);
         this.rook.setPosition(this.position);
 
-        board.setSquarePiece(position, this.rook);
+        board.setSquareValue(position, this.rook);
         this.rook.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.rook.getMoves();
+        var actual = this.rook.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false, false, false));
         expected.addAll(List.of(false, false, true));
@@ -79,11 +79,11 @@ public class RookTest {
         this.rook.setColor(ColorEnum.WHITE);
         this.rook.setPosition(this.position);
 
-        board.setSquarePiece(position, this.rook);
+        board.setSquareValue(position, this.rook);
         this.rook.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.rook.getMoves();
+        var actual = this.rook.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false, false, true));
         expected.addAll(List.of(false, false, true));

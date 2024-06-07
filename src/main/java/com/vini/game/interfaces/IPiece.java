@@ -1,33 +1,32 @@
 package com.vini.game.interfaces;
 
-import com.vini.game.board.Board;
 import com.vini.game.enums.ColorEnum;
 import com.vini.game.enums.PieceEnum;
-import com.vini.game.lib.Position;
+import com.vini.game.structs.Position;
 
 import java.util.List;
 
 public interface IPiece {
 
-    public void resetMoves();
+    public boolean canMove(Position to);
 
-    public void setColor(ColorEnum color);
+    public boolean tryMove(Position to);
 
-    public void setBoard(Board board);
+    public void updateBoard();
 
-    public boolean tryMove(Position position);
+    public String exportIdentifier();
 
-    public String getIdentifiers();
+    public List<Boolean> exportMoves();
+
+    public IBoardSquare getSquare();
+
+    public Position getPosition();
 
     public PieceEnum getType();
 
     public ColorEnum getColor();
 
-    public Position getPosition();
+    public void setColor(ColorEnum color);
 
-    public void setPosition(Position position);
-
-    public IPiece updateMoves();
-
-    public List<Boolean> getMoves();
+    public void setSquare(IBoardSquare square);
 }

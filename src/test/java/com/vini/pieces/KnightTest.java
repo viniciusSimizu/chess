@@ -35,11 +35,11 @@ public class KnightTest {
         this.position.y = 2;
         this.knight.setPosition(this.position);
 
-        board.setSquarePiece(position, this.knight);
+        board.setSquareValue(position, this.knight);
         this.knight.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.knight.getMoves();
+        var actual = this.knight.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false, true, false, true, false));
         expected.addAll(List.of(true, false, false, false, true));
@@ -58,11 +58,11 @@ public class KnightTest {
         this.knight.setColor(ColorEnum.BLACK);
         this.knight.setPosition(this.position);
 
-        board.setSquarePiece(position, this.knight);
+        board.setSquareValue(position, this.knight);
         this.knight.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.knight.getMoves();
+        var actual = this.knight.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false, false, false));
         expected.addAll(List.of(false, false, false));
@@ -79,11 +79,11 @@ public class KnightTest {
         this.knight.setColor(ColorEnum.WHITE);
         this.knight.setPosition(this.position);
 
-        board.setSquarePiece(position, this.knight);
+        board.setSquareValue(position, this.knight);
         this.knight.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.knight.getMoves();
+        var actual = this.knight.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false, false, false));
         expected.addAll(List.of(false, false, true));

@@ -2,35 +2,30 @@ package com.vini.game.piece.pieces;
 
 import com.vini.game.enums.PieceEnum;
 import com.vini.game.interfaces.IPiece;
-import com.vini.game.lib.Position;
 import com.vini.game.piece.Piece;
+import com.vini.game.structs.Position;
 
-public class Queen extends Piece {
+public class Bishop extends Piece {
 
-    private final int[][] directions = {
-        {-1, -1}, {0, -1}, {1, -1}, {-1, 0},
-        {1, 0}, {-1, 1}, {0, 1}, {1, 1}
-    };
+    private static final int[][] directions = {{1, -1}, {1, 1}, {-1, 1}, {-1, -1}};
 
     @Override
-    public IPiece updateMoves() {
+    public void updateMoves() {
         var localPosition = new Position(null, null);
 
-        for (int[] direction : this.directions) {
-            localPosition.x = this.position.x;
-            localPosition.y = this.position.y;
+        for (int[] direction : directions) {
+            localPosition.update(this.position);
 
             while (true) {
                 localPosition.x += direction[0];
                 localPosition.y += direction[1];
 
-                if (!board.isInsideTable(localPosition)) {
+                if (!this.board.isInsideTable(localPosition)) {
                     break;
                 }
                 ;
 
                 IPiece target = board.findPiece(localPosition);
-
                 if (this.isAlly(target)) {
                     break;
                 }
@@ -42,12 +37,10 @@ public class Queen extends Piece {
                 }
             }
         }
-
-        return this;
     }
 
     @Override
     public PieceEnum getType() {
-        return PieceEnum.QUEEN;
+        return PieceEnum.BISHOP;
     }
 }

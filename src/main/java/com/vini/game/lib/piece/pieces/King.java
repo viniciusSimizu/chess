@@ -1,45 +1,38 @@
-package com.vini.game.piece.pieces;
+package com.vini.game.lib.piece.pieces;
 
 import com.vini.game.enums.PieceEnum;
 import com.vini.game.interfaces.IPiece;
-import com.vini.game.lib.Position;
 import com.vini.game.piece.Piece;
+import com.vini.game.structs.Position;
 
 public class King extends Piece {
 
-    private final int[][] directions = {
+    private static final int[][] directions = {
         {-1, -1}, {0, -1}, {1, -1}, {-1, 0},
         {1, 0}, {-1, 1}, {0, 1}, {1, 1}
     };
-    private boolean isFirstMove = true;
 
     @Override
-    public IPiece updateMoves() {
+    public void updateMoves() {
         var localPosition = new Position(null, null);
 
-        for (int[] direction : this.directions) {
-            localPosition.x = this.position.x + direction[0];
-            localPosition.y = this.position.y + direction[1];
+        for (int[] direction : directions) {
+            localPosition.update(this.position);
+            localPosition.x += direction[0];
+            localPosition.y += direction[1];
 
             if (!board.isInsideTable(localPosition)) {
                 continue;
             }
-            ;
 
             IPiece target = board.findPiece(localPosition);
-
             if (this.isAlly(target)) {
                 continue;
             }
 
-            this.moves.set(localPosition.getIndex(this.board.getWidth()), true);
+            var localPositionIndex = localPosition.getIndex(this.board.getWidth());
+            this.moves.set(localPositionIndex, true);
         }
-
-        return this;
-    }
-
-    public boolean isFirstMove() {
-        return this.isFirstMove;
     }
 
     @Override

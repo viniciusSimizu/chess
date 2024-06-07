@@ -1,6 +1,6 @@
 package com.vini.socket.enums;
 
-public enum MessageType {
+public enum MessageTypeEnum {
     CONNECTION,
     RELOAD;
 }

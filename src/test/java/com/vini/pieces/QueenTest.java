@@ -35,11 +35,11 @@ public class QueenTest {
         this.position.y = 2;
         this.queen.setPosition(this.position);
 
-        board.setSquarePiece(position, this.queen);
+        board.setSquareValue(position, this.queen);
         this.queen.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.queen.getMoves();
+        var actual = this.queen.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(true, false, true, false, true));
         expected.addAll(List.of(false, true, true, true, false));
@@ -58,11 +58,11 @@ public class QueenTest {
         this.queen.setColor(ColorEnum.BLACK);
         this.queen.setPosition(this.position);
 
-        board.setSquarePiece(position, this.queen);
+        board.setSquareValue(position, this.queen);
         this.queen.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.queen.getMoves();
+        var actual = this.queen.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false, false, false));
         expected.addAll(List.of(true, true, false));
@@ -79,11 +79,11 @@ public class QueenTest {
         this.queen.setColor(ColorEnum.WHITE);
         this.queen.setPosition(this.position);
 
-        board.setSquarePiece(position, this.queen);
+        board.setSquareValue(position, this.queen);
         this.queen.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.queen.getMoves();
+        var actual = this.queen.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false, true, false));
         expected.addAll(List.of(true, true, false));

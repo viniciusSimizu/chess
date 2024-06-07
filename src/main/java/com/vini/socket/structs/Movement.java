@@ -1,9 +1,9 @@
-package com.vini.socket.lib;
+package com.vini.socket.structs;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.vini.game.lib.Position;
+import com.vini.game.structs.Position;
 
 import java.util.Map;
 

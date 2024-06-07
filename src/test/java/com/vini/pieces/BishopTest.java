@@ -35,11 +35,11 @@ public class BishopTest {
         this.position.y = 2;
         this.bishop.setPosition(this.position);
 
-        board.setSquarePiece(position, this.bishop);
+        board.setSquareValue(position, this.bishop);
         this.bishop.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.bishop.getMoves();
+        var actual = this.bishop.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(true, false, false, false, true));
         expected.addAll(List.of(false, true, false, true, false));
@@ -58,11 +58,11 @@ public class BishopTest {
         this.bishop.setColor(ColorEnum.BLACK);
         this.bishop.setPosition(this.position);
 
-        board.setSquarePiece(position, this.bishop);
+        board.setSquareValue(position, this.bishop);
         this.bishop.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.bishop.getMoves();
+        var actual = this.bishop.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false, false, false, false, false));
         expected.addAll(List.of(false, true, false, false, false));
@@ -79,11 +79,11 @@ public class BishopTest {
         this.bishop.setColor(ColorEnum.WHITE);
         this.bishop.setPosition(this.position);
 
-        board.setSquarePiece(position, this.bishop);
+        board.setSquareValue(position, this.bishop);
         this.bishop.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.bishop.getMoves();
+        var actual = this.bishop.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(true, false, false, false, false));
         expected.addAll(List.of(false, true, false, true, false));

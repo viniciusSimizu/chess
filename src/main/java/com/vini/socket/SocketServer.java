@@ -1,10 +1,8 @@
 package com.vini.socket;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vini.socket.enums.MessageType;
-import com.vini.socket.handlers.RenderBoardHandler;
-import com.vini.socket.lib.Movement;
+import com.vini.socket.enums.MessageTypeEnum;
+import com.vini.socket.lib.RenderBoard;
+import com.vini.socket.lib.RequestHandler;
 import com.vini.socket.models.GameModel;
 
 import org.java_websocket.WebSocket;
@@ -16,12 +14,15 @@ import java.net.InetSocketAddress;
 
 public class SocketServer extends WebSocketServer {
 
+    public static WebSocketServer server;
+
     public SocketServer(int socketPort) {
         super(new InetSocketAddress(socketPort));
     }
 
     @Override
     public void onStart() {
+        server = this;
         Runtime.getRuntime().addShutdownHook(new Thread(this.shutdown()));
         System.out.println("Socket is running");
     }
@@ -29,10 +30,10 @@ public class SocketServer extends WebSocketServer {
     @Override
     public void onOpen(WebSocket connection, ClientHandshake handshake) {
         try {
-            var type = MessageType.CONNECTION;
-            var game = GameModel.INSTANCE;
+            var type = MessageTypeEnum.CONNECTION;
+            var game = GameModel.getInstance();
 
-            String boardState = RenderBoardHandler.render(type, game);
+            String boardState = RenderBoard.render(type, game);
             connection.send(boardState);
 
         } catch (IOException e) {
@@ -43,29 +44,7 @@ public class SocketServer extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket connection, String message) {
-        var objMapper = new ObjectMapper();
-        Movement movement;
-
-        try {
-            movement = objMapper.readValue(message, Movement.class);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        boolean hasMoved = GameModel.INSTANCE.tryMove(movement.from, movement.to);
-        if (!hasMoved) {
-            return;
-        }
-
-        try {
-            var type = MessageType.RELOAD;
-            var game = GameModel.INSTANCE;
-
-            this.broadcast(RenderBoardHandler.render(type, game));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        RequestHandler.handle(connection, message);
     }
 
     @Override
@@ -77,6 +56,7 @@ public class SocketServer extends WebSocketServer {
     public void onError(WebSocket connection, Exception exception) {
         System.out.println("onError");
         System.out.println(exception.getMessage());
+        exception.printStackTrace();
         if (connection != null) {
             connection.close(1001);
         }

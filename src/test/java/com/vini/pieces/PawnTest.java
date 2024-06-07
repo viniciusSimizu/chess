@@ -38,11 +38,11 @@ public class PawnTest {
         this.pawn.setIsFirstMoveFlag(false);
         this.pawn.setPosition(this.position);
 
-        board.setSquarePiece(this.position, this.pawn);
+        board.setSquareValue(this.position, this.pawn);
         this.pawn.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.pawn.getMoves();
+        var actual = this.pawn.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false));
         expected.addAll(List.of(false));
@@ -61,11 +61,11 @@ public class PawnTest {
         this.pawn.setIsFirstMoveFlag(true);
         this.pawn.setPosition(this.position);
 
-        board.setSquarePiece(this.position, this.pawn);
+        board.setSquareValue(this.position, this.pawn);
         this.pawn.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.pawn.getMoves();
+        var actual = this.pawn.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false));
         expected.addAll(List.of(true));
@@ -84,11 +84,11 @@ public class PawnTest {
         this.pawn.setColor(ColorEnum.BLACK);
         this.pawn.setPosition(this.position);
 
-        board.setSquarePiece(this.position, this.pawn);
+        board.setSquareValue(this.position, this.pawn);
         this.pawn.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.pawn.getMoves();
+        var actual = this.pawn.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false));
         expected.addAll(List.of(false));
@@ -106,11 +106,11 @@ public class PawnTest {
         this.pawn.setColor(ColorEnum.WHITE);
         this.pawn.setPosition(this.position);
 
-        board.setSquarePiece(this.position, this.pawn);
+        board.setSquareValue(this.position, this.pawn);
         this.pawn.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.pawn.getMoves();
+        var actual = this.pawn.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(true));
         expected.addAll(List.of(false));
@@ -128,11 +128,11 @@ public class PawnTest {
         this.pawn.setIsFirstMoveFlag(true);
         this.pawn.setPosition(this.position);
 
-        board.setSquarePiece(this.position, this.pawn);
+        board.setSquareValue(this.position, this.pawn);
         this.pawn.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.pawn.getMoves();
+        var actual = this.pawn.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false, false, false));
         expected.addAll(List.of(false, false, false));
@@ -160,11 +160,11 @@ public class PawnTest {
         targetPawn.setMovedTwoRound(board.getRound());
         board.newRound();
 
-        board.setSquarePiece(this.position, this.pawn);
+        board.setSquareValue(this.position, this.pawn);
         this.pawn.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.pawn.getMoves();
+        var actual = this.pawn.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false, false, false, false, false));
         expected.addAll(List.of(false, true, false, true, false));
@@ -181,7 +181,7 @@ public class PawnTest {
         this.pawn.setColor(ColorEnum.WHITE);
         this.pawn.setIsFirstMoveFlag(true);
         this.pawn.setPosition(this.position);
-        board.setSquarePiece(this.position, this.pawn);
+        board.setSquareValue(this.position, this.pawn);
 
         var squarePosition = new Position(3, 2);
         IPiece square = board.findPiece(squarePosition);
@@ -196,7 +196,7 @@ public class PawnTest {
         this.pawn.setBoard(board);
         board.updatePieceMovements();
 
-        var actual = this.pawn.getMoves();
+        var actual = this.pawn.exportMoves();
         var expected = new ArrayList<Boolean>();
         expected.addAll(List.of(false, false, false, false, false));
         expected.addAll(List.of(false, true, false, true, false));
